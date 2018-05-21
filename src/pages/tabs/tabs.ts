@@ -3,6 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { IonicPage, NavController } from 'ionic-angular';
 
 import { Tab1Root, Tab2Root, Tab3Root } from '../';
+import { SubordinatesPage } from '../subordinates/subordinates';
 
 @IonicPage()
 @Component({
@@ -13,6 +14,7 @@ export class TabsPage {
   tab1Root: any = Tab1Root;
   tab2Root: any = Tab2Root;
   tab3Root: any = Tab3Root;
+  tab4Root: any = SubordinatesPage;
 
   tab1Title = " ";
   tab2Title = " ";
@@ -24,5 +26,9 @@ export class TabsPage {
       this.tab2Title = values['TAB2_TITLE'];
       this.tab3Title = values['TAB3_TITLE'];
     });
+  }
+
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad TabsPage'); //NOTE: refresh data here?
   }
 }

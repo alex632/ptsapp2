@@ -27,7 +27,7 @@ import { Settings } from '../providers';
   <ion-nav #content [root]="rootPage"></ion-nav>`
 })
 export class MyApp {
-  rootPage = FirstRunPage;
+  rootPage = '';  //FirstRunPage;
 
   @ViewChild(Nav) nav: Nav;
 
@@ -51,6 +51,13 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+      settings.load().then(() => {
+        if (settings.allSettings.skipTutorial) {
+          this.rootPage = 'WelcomePage';
+        } else {
+          this.rootPage = FirstRunPage;
+        }
+      });
     });
     this.initTranslate();
   }

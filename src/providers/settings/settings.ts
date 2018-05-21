@@ -15,6 +15,7 @@ export class Settings {
 
   constructor(public storage: Storage, defaults: any) {
     this._defaults = defaults;
+    //console.log('Settings provider constructed with defautls', defaults);
   }
 
   load() {
