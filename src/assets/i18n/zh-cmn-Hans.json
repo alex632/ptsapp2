@@ -1,4 +1,6 @@
 {
+  "EMPLOYEE_ID": "工号",
+
   "BACK_BUTTON_TEXT": "回退",
 
   "NAME": "姓名",
@@ -14,21 +16,24 @@
 
   "MAP_TITLE": "地图",
 
+  "TUTORIAL_ACKNOWLEDGED_BUTTON": "我知道了",
   "TUTORIAL_SKIP_BUTTON": "跳过",
   "TUTORIAL_CONTINUE_BUTTON": "继续",
 
-  "TUTORIAL_SLIDE1_TITLE": "欢迎来到 Ionic Super Starter",
-  "TUTORIAL_SLIDE1_DESCRIPTION": "<b>Ionic Super Starter</b> 是一个功能全面，内置多个页面以及最佳实践的 Ionic 入门教程。",
+  "TUTORIAL_SLIDE1_TITLE": "欢迎使用 PTS App",
+  "TUTORIAL_SLIDE1_DESCRIPTION": "<b>PTS App</b> 的主要目的是让同仁、主管可以<strong>随时随地填报与审核工时</strong>，不再受限于必须使用计算机或公司内部网络，大家可以<strong>利用每天零碎的时间</strong>来填报与审核工时，这样不但可以节省大家的时间，亦可让报工数据更为准确，以下一些小技巧，供大家参考。",
 
-  "TUTORIAL_SLIDE2_TITLE": "如何使用 Super 入门教程",
-  "TUTORIAL_SLIDE2_DESCRIPTION": "使用你需要的多种多样的页面删除你不需要的页面。我们提供许多常见移动 app 页面，如登录、注册页面，tabs 标签页，以及本教程页面。",
+  "TUTORIAL_SLIDE2_TITLE": "工时填写",
+  "TUTORIAL_SLIDE2_DESCRIPTION": "1. <strong>每天下班前，花3~5 分钟</strong>，回想一下当天进行的主要工作(不需巨细靡遗，精准到每分钟，约以0.5小时为单位即可)，若工作项目已经存在，只要输入时间即可，若是新的工作，再新增项目，星期一早上只要再快速检视上周工时，然后送出即可。因星期一使用PTS 的人数众多，<strong>请尽可能不要到星期一才填写上周的工时，这不仅会花更多的时间，而且误差可能很大</strong>。<br>2. 若是支持的项目没有太大改变，<strong>可利用复制上周工时的功能，先将上周的工作项目复制到本周</strong>，然后再调整每天的工时即可，这样可以帮您省下许多时间。<br>3. 每天填写的总工时，不可少于公司标准工时(依各Site 可能不同)，<strong>跟专案无关</strong>的公司、部门、个人等活动、国定假日、个人休假，<strong>请选择Non-Project</strong>相关的工作项目，星期六、日可不填写(加班除外)。",
 
-  "TUTORIAL_SLIDE3_TITLE": "开始",
-  "TUTORIAL_SLIDE3_DESCRIPTION": "需要帮助？查看 Super 入门教程的帮助文档，可获得完整教程。",
+  "TUTORIAL_SLIDE3_TITLE": "审核部属工时",
+  "TUTORIAL_SLIDE3_DESCRIPTION": "1. 主管审核同仁的工时时，<strong>先看各项目与工作项目的工时统计图</strong>，可省下主管审核的时间，若是有问题再看详细的工作清单即可。<br>2. 由于星期一早上填报工时或提交工时的人数众多，<strong>建议您在星期一下午后，再开始审核部属工时</strong>。",
 
   "TUTORIAL_SLIDE4_TITLE": "开始学习？",
 
   "WELCOME_INTRO": "出发，你的下一个强大的 Ionic app",
+
+  "SETTINGS_OPTION_LANG": "语言",
 
   "SETTINGS_TITLE": "设置",
   "SETTINGS_OPTION1": "选项 1",

@@ -5,47 +5,69 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
   <ion-navbar>
     <ion-title>Subordinates</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="refresh()">
+        <ion-icon name="refresh"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
-
 </ion-header>
 
-
 <ion-content>
+
   <ion-list>
     <ion-list-header>直屬的部門成員</ion-list-header>
-    <ion-item *ngFor="let uid of Object.keys(subMembers)">
+    <ion-item *ngFor="let member of myMembers">
       <ion-avatar item-start>
-        <img src="https://pts.wistron.com/~pts/dispatcher/account/account_photo.php?action=get_photo&to=get_user_photo&id={{uid}}">
+        <img src="https://pts.wistron.com/~pts/dispatcher/account/account_photo.php?action=get_photo&to=get_user_photo&id={{member.id}}">
       </ion-avatar>
-      <div style="width:30%; overflow: hidden;">
-        <h2><b>{{subMembers[uid].user_info.name}}</b></h2>
-        <p>{{subMembers[uid].user_info.dept_name}}</p>
+      <div class="name-block">
+        <h2><b>{{member.user.user_info.name}}</b></h2>
+        <p>{{member.user.user_info.dept_name}}</p>
       </div>
-      <button ion-button icon-only clear (click)="openWeek(week)" *ngFor="let week of subMembers[uid].data">
-        <ion-icon [name]="week.icon" [style.color]="week.color"></ion-icon>
-      </button>
+      <div class="data-block">
+        <div (click)="openWeek(week, member)" *ngFor="let week of member.user.data" class="data-item">
+        <!--<button ion-button icon-only clear (click)="openWeek(week, member)" *ngFor="let week of member.user.data">-->
+          <ion-icon name="ptsapp2-mad" [style.color]="week.color"></ion-icon>
+        <!--</button>-->
+        </div>
+      </div>
     </ion-item>
   </ion-list>
+
   <ion-list>
     <ion-list-header>直屬的部門主管</ion-list-header>
-    <ion-item *ngFor="let uid of Object.keys(subHeads)">
+    <ion-item *ngFor="let member of subHeads">
+      <!--<b>{{member.user.user_info.name}}</b> <span>{{member.user.user_info.dept_name}}</span>-->
       <ion-avatar item-start>
-        <img src="https://pts.wistron.com/~pts/dispatcher/account/account_photo.php?action=get_photo&to=get_user_photo&id={{uid}}">
+        <img src="https://pts.wistron.com/~pts/dispatcher/account/account_photo.php?action=get_photo&to=get_user_photo&id={{member.id}}">
       </ion-avatar>
-      <div style="width:30%; overflow: hidden;">
-        <h2><b>{{subHeads[uid].user_info.name}}</b></h2>
-        <p>{{subHeads[uid].user_info.dept_name}}</p>
+      <div class="name-block">
+        <h2><b>{{member.user.user_info.name}}</b></h2>
+        <p>{{member.user.user_info.dept_name}}</p>
       </div>
-      <button ion-button icon-only clear (click)="openWeek(week)" *ngFor="let week of subHeads[uid].data">
-        <ion-icon [name]="week.icon" [style.color]="week.color"></ion-icon>
-        <!--<img [src]='week.img' />-->
-      </button>
+      <div class="data-block">
+        <div (click)="openWeek(week, member)" *ngFor="let week of member.user.data" class="data-item">
+        <!--<button ion-button icon-only clear (click)="openWeek(week, member)" *ngFor="let week of member.user.data" class="data-item">-->
+          <!--<ion-icon [name]="week.icon" [style.color]="week.color"></ion-icon>-->
+          <ion-icon name="ptsapp2-mad" [style.color]="week.color"></ion-icon>
+          <!--<img [src]='week.img'/>-->
+        <!--</button>-->
+        </div>
+      </div>
     </ion-item>
   </ion-list>
+
   <ion-list>
     <ion-list-header>部門</ion-list-header>
   </ion-list>
+  <!--<ion-label>部門</ion-label>-->
+  <div class="dept-container">
+    <div class="dept" *ngFor="let dept of subDepartments.data" (click)="openDept(dept)">
+      <img src="assets/img/user.png" /><div>{{dept.name}}</div>
+    </div>
+  </div>
+
 </ion-content>

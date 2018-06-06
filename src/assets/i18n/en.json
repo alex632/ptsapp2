@@ -1,4 +1,6 @@
 {
+  "EMPLOYEE_ID": "Employee ID",
+
   "BACK_BUTTON_TEXT": "Back",
 
   "NAME": "Name",
@@ -14,28 +16,25 @@
 
   "MAP_TITLE": "Map",
 
+  "TUTORIAL_ACKNOWLEDGED_BUTTON": "Acknowledged",
   "TUTORIAL_SKIP_BUTTON": "Skip",
   "TUTORIAL_CONTINUE_BUTTON": "Continue",
 
-  "x-TUTORIAL_SLIDE1_TITLE": "Welcome to the Ionic Super Starter",
-  "x-TUTORIAL_SLIDE1_DESCRIPTION": "The <b>Ionic Super Starter</b> is a fully-featured Ionic starter with many pre-built pages and best practices.",
-  "TUTORIAL_SLIDE1_TITLE": "歡迎使用 PTS App",
-  "TUTORIAL_SLIDE1_DESCRIPTION": "<b>PTS App</b> 的主要目的是讓同仁、主管可以<strong>隨時隨地填報與審核工時</strong>，不再受限於必須使用電腦或公司內部網路，大家可以<strong>利用每天零碎的時間</strong>來填報與審核工時，這樣不但可以節省大家的時間，亦可讓報工資料更為準確，以下一些小技巧，供大家參考。",
+  "TUTORIAL_SLIDE1_TITLE": "Welcome to the PTS App",
+  "TUTORIAL_SLIDE1_DESCRIPTION": "The <b>PTS App</b> is intended as a platform for colleagues and department heads to submit and approve timesheets <strong>anywhere, anytime and through any network.</strong> With this app, timesheet submission and approval will no longer require a computer or connection to the company’s internal network, and <strong>can be done during any spare moment of the day.</strong> A great time-saver and accuracy enhancer, the PTS App improves your timesheet experience. Here are a few tips for your reference.",
 
-  "x-TUTORIAL_SLIDE2_TITLE": "How to use the Super Starter",
-  "x-TUTORIAL_SLIDE2_DESCRIPTION": "Assemble the various page types you want and remove the ones you don't. We've provided many common mobile app page layouts, like login and signup pages, tabs, and this tutorial page.",
-  "TUTORIAL_SLIDE2_TITLE": "工時填寫",
-  "TUTORIAL_SLIDE2_DESCRIPTION": "1. <strong>每天下班前，花3~5 分鐘</strong>，回想一下當天進行的主要工作(不需鉅細靡遺，精準到每分鐘，約以0.5小時為單位即可)，若工作項目已經存在，只要輸入時間即可，若是新的工作，再新增項目，星期一早上只要再快速檢視上週工時，然後送出即可。因星期一使用PTS 的人數眾多，<strong>請儘可能不要到星期一才填寫上週的工時，這不僅會花更多的時間，而且誤差可能很大</strong>。<br>2. 若是支援的專案沒有太大改變，<strong>可利用複製上週工時的功能，先將上週的工作項目複製到本週</strong>，然後再調整每天的工時即可，這樣可以幫您省下許多時間。<br>3. 每天填寫的總工時，不可少於公司標準工時(依各Site 可能不同)，<strong>跟專案無關</strong>的公司、部門、個人等活動、國定假日、個人休假，<strong>請選擇Non-Project</strong>相關的工作項目，星期六、日可不填寫(加班除外)。",
+  "TUTORIAL_SLIDE2_TITLE": "My Time Sheet",
+  "TUTORIAL_SLIDE2_DESCRIPTION": "1. <strong>Every day before you get off work, spend 3~5 minutes</strong>, to recall what work you have done during the day (no need to go overboard with the details down to every minute; use 0.5 hours as a base unit). If the project you are working on already exists in the timesheet, simply fill in the amount of time you spent on it. If you are working on something new, please add a new project. On Monday morning, simply perform a quick review of last week’s timesheet before you submit it. Since Mondays are usually peak traffic days for PTS, <strong>we recommend that you avoid waiting until Monday to fill in the previous week’s timesheet. It will take you more time and errors are more likely to occur.</strong><br>2. If you are mostly working on the same projects as you did last week, <strong>you can use the copy function to copy last week’s projects to this week’s timesheet, </strong>and then adjust the specific hours for each day. This way, you can save a lot of time and effort.<br>3. The total work hours you fill in should not be fewer than the standard work hours of the company (each site may have different standards). <strong>Non-project</strong> related company, department, or personal activities, national holidays and personal leaves <strong>should be filled in as “Non-Project” items</strong> on the timesheet. You don’t need to fill in the timesheet for Saturdays and Sundays (unless you worked overtime on these days).",
 
-  "x-TUTORIAL_SLIDE3_TITLE": "Getting Started",
-  "x-TUTORIAL_SLIDE3_DESCRIPTION": "Need help? Check out the Super Starter README for a full tutorial",
-  "TUTORIAL_SLIDE3_TITLE": "審核部屬工時",
-  "TUTORIAL_SLIDE3_DESCRIPTION": "1. 主管審核同仁的工時時，<strong>先看各專案與工作項目的工時統計圖</strong>，可省下主管審核的時間，若是有問題再看詳細的工作清單即可。<br>2. 由於星期一早上填報工時或提交工時的人數眾多，<strong>建議您在星期一下午後，再開始審核部屬工時</strong>。",
+  "TUTORIAL_SLIDE3_TITLE": "Approving Subordinate Timesheets",
+  "TUTORIAL_SLIDE3_DESCRIPTION": "1. Before you review your subordinates' timesheets, you can save some time by firstly taking a <strong>look at the statistical charts</strong> of the various projects and work items. This way, you can see directly if there are problems and then view details of the related items when necessary.<br>2. Since a significant number of colleagues tend to fill in and submit their timesheets on Monday mornings, <strong>we recommend that you review subordinate timesheets on late Monday afternoons</strong>.",
 
   "TUTORIAL_SLIDE4_TITLE": "Ready to Play?",
 
   "WELCOME_INTRO": "The starting point for your next great Ionic app",
 
+  "SETTINGS_OPTION_LANG": "Language",
+  
   "SETTINGS_TITLE": "Settings",
   "SETTINGS_OPTION1": "Option 1",
   "SETTINGS_OPTION2": "Option 2",

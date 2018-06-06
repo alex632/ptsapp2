@@ -1,4 +1,43 @@
 page-subordinates {
     b {color: brown; font-weight: bold}
-    div {float: left}
+    div.name-block {
+        //display: inline-flex;
+        float: left; 
+        width: 30%;
+        overflow: hidden;
+        //border: 1px solid green;
+    }
+    div.data-block {
+        float: left;
+        width: 70%;
+        display: flex;
+        overflow: hidden; 
+        //border: 1px solid red;
+    }
+    .data-item {
+        flex: 1;
+        border: 1px solid blue;
+        margin: 2px;
+        padding: 4px;
+        text-align: center;
+    }
+
+    .dept-container {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .dept {
+        float: left;
+        //width: calc(100% - 16px);
+        //height: calc(100% - 16px);
+        margin-left: 8px;
+        margin-right: 8px;
+        margin-bottom: 16px;
+        padding: 16px;
+        //position: absolute;
+        //color: white;
+        //background-color: #0095ff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+    }    
 }

@@ -1,7 +1,7 @@
 <ion-header no-shadow>
   <ion-navbar>
     <ion-buttons end *ngIf="showSkip">
-      <button ion-button (click)="notAgain()" color="primary">我知道了</button>
+      <button ion-button (click)="acknowledge()" color="primary">{{ 'TUTORIAL_ACKNOWLEDGED_BUTTON' | translate}}</button>
       <button ion-button (click)="startApp()" color="primary">{{ 'TUTORIAL_SKIP_BUTTON' | translate}}{{countDownIndicator}}</button>
     </ion-buttons>
   </ion-navbar>

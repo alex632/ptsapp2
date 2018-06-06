@@ -32,34 +32,34 @@ export class TutorialPage {
       "TUTORIAL_SLIDE3_DESCRIPTION",
     ]).subscribe(
       (values) => {
-        console.log('TutorialPage constructor loaded values', values);
+        //console.log('TutorialPage constructor loaded values', values);
         this.slides = [
           {
             title: values.TUTORIAL_SLIDE1_TITLE,
             description: values.TUTORIAL_SLIDE1_DESCRIPTION,
-            image: 'assets/img/ica-slidebox-img-1.png',
+            image: 'assets/img/ptsapp.png',
           },
           {
             title: values.TUTORIAL_SLIDE2_TITLE,
             description: values.TUTORIAL_SLIDE2_DESCRIPTION,
-            image: 'assets/img/ica-slidebox-img-2s.png',
+            image: 'assets/img/tips.png',
           },
           {
             title: values.TUTORIAL_SLIDE3_TITLE,
             description: values.TUTORIAL_SLIDE3_DESCRIPTION,
-            image: 'assets/img/ica-slidebox-img-3.png',
+            image: 'assets/img/tips.png',
           }
         ];
       });
   }
 
-  notAgain() {
+  acknowledge() {
     this.settings.setValue('skipTutorial',true);
     this.startApp();
   }
 
   startApp() {
-    this.navCtrl.setRoot('WelcomePage', {}, {
+    this.navCtrl.setRoot('LoginPage', {}, {
       animate: true,
       direction: 'forward'
     });
@@ -72,12 +72,10 @@ export class TutorialPage {
   ionViewDidEnter() {
     // the root left menu should be disabled on the tutorial page
     this.menu.enable(false);
-    console.log('TutorialPage entered');
-    // Some time after tutorial page shows up, start counting down then auto skip.
+    // Some time (5 seconds) after tutorial page shows up, start counting down then auto skip. I did it just for fun. Ha!
     this.countDownTimer = setTimeout( ()=>{
       function autoJump(it, countDown) {
         it.countDownIndicator = ` (${countDown})`;
-        //console.log(`tutorial page ${countDown}.`);
         if (countDown) {
           it.countDownTimer = setTimeout(autoJump, 1000, it, countDown-1);
         } else {

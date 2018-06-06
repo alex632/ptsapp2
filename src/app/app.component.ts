@@ -28,6 +28,7 @@ import { Settings } from '../providers';
 })
 export class MyApp {
   rootPage = '';  //FirstRunPage;
+  lang: string = 'auto';
 
   @ViewChild(Nav) nav: Nav;
 
@@ -51,15 +52,18 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+
       settings.load().then(() => {
+        this.lang = settings.allSettings.optionLang;
         if (settings.allSettings.skipTutorial) {
-          this.rootPage = 'WelcomePage';
+          this.rootPage = 'LoginPage';
         } else {
           this.rootPage = FirstRunPage;
         }
+        this.initTranslate();
       });
     });
-    this.initTranslate();
+    //this.initTranslate(); //NOTE: settings may not be available yet.
   }
 
   initTranslate() {
@@ -67,20 +71,36 @@ export class MyApp {
     this.translate.setDefaultLang('en');
     const browserLang = this.translate.getBrowserLang();
 
-    if (browserLang) {
-      if (browserLang === 'zh') {
-        const browserCultureLang = this.translate.getBrowserCultureLang();
+    switch (this.lang) {
+      case 'en':   // English
+        this.translate.use('en');
+        console.log('User explicitly chose EN');
+        break;
+      case 'sc':   // SC
+        this.translate.use('zh-cmn-Hans');
+        console.log('User explicitly chose SC');
+        break;
+      case 'tc':   // TC
+        this.translate.use('zh-cmn-Hant');
+        console.log('User explicitly chose TC');
+        break;
+      default:    // Auto
+        if (browserLang) {
+          if (browserLang === 'zh') {
+            const browserCultureLang = this.translate.getBrowserCultureLang();
 
-        if (browserCultureLang.match(/-CN|CHS|Hans/i)) {
-          this.translate.use('zh-cmn-Hans');
-        } else if (browserCultureLang.match(/-TW|CHT|Hant/i)) {
-          this.translate.use('zh-cmn-Hant');
+            if (browserCultureLang.match(/-CN|CHS|Hans/i)) {
+              this.translate.use('zh-cmn-Hans');
+            } else if (browserCultureLang.match(/-TW|CHT|Hant/i)) {
+              this.translate.use('zh-cmn-Hant');
+            }
+          } else {
+            this.translate.use(this.translate.getBrowserLang());
+          }
+        } else {
+          this.translate.use('en'); // Set your language here
         }
-      } else {
-        this.translate.use(this.translate.getBrowserLang());
-      }
-    } else {
-      this.translate.use('en'); // Set your language here
+        break;
     }
 
     this.translate.get(['BACK_BUTTON_TEXT']).subscribe(values => {

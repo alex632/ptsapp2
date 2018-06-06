@@ -16,6 +16,20 @@
       </ion-item>
 
       <ion-item>
+        <button ion-button color="danger" (click)="clearStorage()">Clear Storage</button>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>{{ 'SETTINGS_OPTION_LANG' | translate }}</ion-label>
+        <ion-select formControlName="optionLang">
+          <ion-option value="auto" checked="true">Auto</ion-option>
+          <ion-option value="en">English</ion-option>
+          <ion-option value="sc">简体中文 Simplified Chinese</ion-option>
+          <ion-option value="tc">繁體中文 Traditional Chinese</ion-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
         <ion-label>Server URL</ion-label>
         <ion-input formControlName="serverUrl"></ion-input>
       </ion-item>

@@ -1,10 +1,12 @@
 {
+  "EMPLOYEE_ID": "工號",
+
   "BACK_BUTTON_TEXT": "回退",
 
   "NAME": "姓名",
   "EMAIL": "郵箱",
   "USERNAME": "登錄名",
-  "PASSWORD": "口令",
+  "PASSWORD": "密碼",
   "LOGIN": "登 錄",
   "SIGNUP": "註 冊",
 
@@ -14,6 +16,7 @@
 
   "MAP_TITLE": "地圖",
 
+  "TUTORIAL_ACKNOWLEDGED_BUTTON": "我知道了",
   "TUTORIAL_SKIP_BUTTON": "跳過",
   "TUTORIAL_CONTINUE_BUTTON": "繼續",
 
@@ -29,6 +32,8 @@
   "TUTORIAL_SLIDE4_TITLE": "開始學習？",
 
   "WELCOME_INTRO": "出發，你的下一個強大的 Ionic app",
+
+  "SETTINGS_OPTION_LANG": "語言",
 
   "SETTINGS_TITLE": "設置",
   "SETTINGS_OPTION1": "選項 1",

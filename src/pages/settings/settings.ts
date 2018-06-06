@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { Storage } from '@ionic/storage';
 
 import { Settings } from '../../providers';
 
@@ -18,6 +19,7 @@ import { Settings } from '../../providers';
 export class SettingsPage {
   // Our local settings object
   options: any;
+  curlang: string;
 
   settingsReady = false;
 
@@ -38,6 +40,8 @@ export class SettingsPage {
     public settings: Settings,
     public formBuilder: FormBuilder,
     public navParams: NavParams,
+    private alertCtrl: AlertController,
+    public storage: Storage,
     public translate: TranslateService) {
   }
 
@@ -45,6 +49,7 @@ export class SettingsPage {
     let group: any = {
       skipTutorial: [this.options.skipTutorial],
       serverUrl: [this.options.serverUrl],
+      optionLang: [this.options.optionLang],
       option1: [this.options.option1],
       option2: [this.options.option2],
       option3: [this.options.option3]
@@ -64,6 +69,11 @@ export class SettingsPage {
     // Watch the form for changes, and
     this.form.valueChanges.subscribe((v) => {
       this.settings.merge(this.form.value);
+
+      if (this.curlang != this.form.value.optionLang) {
+        console.log('Language changed.');
+        location.reload();
+      }
     });
   }
 
@@ -86,6 +96,7 @@ export class SettingsPage {
     this.settings.load().then(() => {
       this.settingsReady = true;
       this.options = this.settings.allSettings;
+      this.curlang = this.options.optionLang;
 
       this._buildForm();
     });
@@ -93,5 +104,29 @@ export class SettingsPage {
 
   ngOnChanges() {
     console.log('Ng All Changes');
+  }
+
+  clearStorage() {
+    let alert = this.alertCtrl.create({
+      title: 'Clear Storage',
+      message: 'Are you sure?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            //console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Yes',
+          handler: () => {
+            console.log('Clear Storage confirmed');
+            this.storage.clear();
+          }
+        }
+      ]
+    });
+    alert.present();
   }
 }

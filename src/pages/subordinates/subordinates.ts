@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { SubordinatesProvider } from '../../providers/subordinates/subordinates';
 
 /**
@@ -16,26 +16,37 @@ import { SubordinatesProvider } from '../../providers/subordinates/subordinates'
 })
 export class SubordinatesPage {
   Object = Object;
-  subHeads: Object = {};  // = {1:{user_info:{name:'Robot', dept_name:'joker'}}};
-  subMembers: Object = {};
+  myMembersInfo: any;
+  myMembers: Array<any>;
+  subHeadsInfo: any;
+  subHeads: Array<any>;
   subDepartments: Object = {};
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public subordinates: SubordinatesProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public events: Events, public subordinates: SubordinatesProvider) {
   }
 
   /**
    * The view loaded, let's load the data from storage or Web server.
    */
   ionViewDidLoad() {
+
     function setWeekIcon(week) {
       if (week['status']==='Review') {
         week['img'] = 'assets/img/bullet-blue.png';
         week['icon'] = 'happy';
-        week['color'] = 'blue';
+        week['color'] = 'cyan';
       } else if (week['status']==='Draft') {
         week['img'] = 'assets/img/bullet-yellow.png';
         week['icon'] = 'happy';     //'information-circle';
         week['color'] = "#FFC104";  // yellow
+      } else if (week['status']==='Approve') {
+        week['img'] = 'assets/img/bullet-green.png';
+        week['icon'] = 'happy';     //'information-circle';
+        week['color'] = "rgb(143, 252, 0)"; //"#00FFFF";
+      } else if (week['status']==='Reject') {
+        week['img'] = 'assets/img/bullet-red.png';
+        week['icon'] = 'sad';     //'information-circle';
+        week['color'] = "red";
       } else {
         week['img'] = 'assets/img/bullet-grey.png';
         week['icon'] = 'sad';
@@ -43,25 +54,52 @@ export class SubordinatesPage {
       }
     }
     function setAllWeeksIcon(people) {
-      for (let uid in people) {
-        //people[uid]['data'] = people[uid]['data'].slice(5);   // reduce 10 to 5
-        for (let week of people[uid]['data']) {
+      for (let usr of people) {
+        for (let week of usr.user.data) {
           setWeekIcon(week);
         }
       }
     }
+
     console.log('ionViewDidLoad SubordinatesPage');
-    this.subordinates.getMembers().then(resp=>{
-      this.subMembers = resp;
-      setAllWeeksIcon(this.subMembers);
+    this.subordinates.getMembers().subscribe(obj=>{
+      this.myMembersInfo = obj;
+      this.myMembers = this.myMembersInfo.data.members;
+      setAllWeeksIcon(this.myMembers);
+      console.log('myMembersInfo', obj);
     });
-    this.subordinates.getSubHeads().then(resp=>{
-      this.subHeads = resp;
+    this.subordinates.getSubHeads().subscribe(obj=>{
+      this.subHeadsInfo = obj;
+      this.subHeads = this.subHeadsInfo.data.members;
       setAllWeeksIcon(this.subHeads);
+      console.log('subHeadsInfo', this.subHeadsInfo);
+    });
+    this.subordinates.getSubDepartments().then(obj => {
+      this.subDepartments = obj;
     });
   }
 
-  openWeek(week) {
-    console.log('week', week);
+  ionViewDidEnter() {
+    console.log('ionViewDidEnter SubordinatesPage');
+  }
+
+  ionViewWillLeave() {
+    console.log('ionViewWillLeave SubordinatesPage');
+  }
+
+  refresh() {
+    this.events.publish('subordinates-refresh-requested');
+  }
+
+  openWeek(week, member) {
+    //console.log('week', week, member);
+    this.navCtrl.push('SubordinateReviewPage', {
+      member: member,
+      week: week
+    });
+  }
+
+  openDept(dept) {
+    console.log('Enter dept', dept);
   }
 }
