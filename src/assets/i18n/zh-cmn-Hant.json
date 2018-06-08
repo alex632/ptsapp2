@@ -2,7 +2,9 @@
   "EMPLOYEE_ID": "工號",
   "CHART_BUTTON": "圖表",
   "LIST_BUTTON": "列表",
-  "MY_TIMESHEET": "我的工作日誌",
+  "TAB_TITLE_MY_TIMESHEET": "我的工作日誌",
+  "TAB_TITLE_REVIEW_TIMESHEET": "審核工時",
+  "SKIP_TUTORIAL_PAGE": "跳過教程頁面",
 
   "BACK_BUTTON_TEXT": "回退",
 

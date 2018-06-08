@@ -12,16 +12,15 @@
     <ion-avatar item-start>
       <img src="https://pts.wistron.com/~pts/dispatcher/account/account_photo.php?action=get_photo&to=get_user_photo&id={{myUID}}">
     </ion-avatar>
-    I am who I am.
-    <ion-buttons end>
-      <button ion-button color="danger" (click)="logout()">Logout</button>
-    </ion-buttons>
+    <div class="user-block"><div class="user-info">Alexander the great</div>
+      <div><button ion-button color="danger" (click)="logout()">Logout</button></div>
+    </div>
   </ion-item>
 
   <form [formGroup]="form" *ngIf="settingsReady">
     <ion-list *ngIf="page == 'main'">
       <ion-item>
-        <ion-label>Skip Tutorial Pages</ion-label>
+        <ion-label>{{ 'SKIP_TUTORIAL_PAGE' | translate }}</ion-label>
         <ion-toggle formControlName="skipTutorial"></ion-toggle>
       </ion-item>
 

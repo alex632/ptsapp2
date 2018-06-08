@@ -2,7 +2,9 @@
   "EMPLOYEE_ID": "Employee ID",
   "CHART_BUTTON": "Chart",
   "LIST_BUTTON": "List",
-  "MY_TIMESHEET": "My Time Sheet",
+  "TAB_TITLE_MY_TIMESHEET": "My Time Sheet",
+  "TAB_TITLE_REVIEW_TIMESHEET": "Review Time Sheet",
+  "SKIP_TUTORIAL_PAGE": "Skip Tutorial Pages",
  
   "BACK_BUTTON_TEXT": "Back",
 
