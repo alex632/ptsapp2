@@ -20,6 +20,7 @@ export class SettingsPage {
   // Our local settings object
   options: any;
   curlang: string;
+  myUID: string;
 
   settingsReady = false;
 
@@ -43,6 +44,10 @@ export class SettingsPage {
     private alertCtrl: AlertController,
     public storage: Storage,
     public translate: TranslateService) {
+      storage.get('$MyUID$').then(value=>{
+        this.myUID = value;
+        //console.log("MyUID", this.myUID);
+      });
   }
 
   _buildForm() {
@@ -129,4 +134,29 @@ export class SettingsPage {
     });
     alert.present();
   }
+
+  logout() {
+    let alert = this.alertCtrl.create({
+      title: 'Logout',
+      message: 'Are you sure?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+          }
+        },
+        {
+          text: 'Yes',
+          handler: () => {
+            this.storage.clear().then(()=> {
+              this.navCtrl.setRoot('LoginPage');
+            });
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
 }

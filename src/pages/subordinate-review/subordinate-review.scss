@@ -1,3 +1,27 @@
 page-subordinate-review {
-
+    ion-footer {
+        display: flex;
+        justify-content: space-around;
+    }
+    ion-item-group {
+        margin-bottom: 1em;
+        border-top: 1px solid blue;
+        border-left: 1px solid blue;
+        border-right: 1px solid blue;
+    }
+    div.week {
+        display: flex;
+        border-top: 1px solid blue;
+        border-bottom: 1px solid blue;
+    }
+    div.day {
+        flex: 1;
+        text-align: center;
+        font-weight: bolder;
+        padding: 0.5em;
+        border-right: 1px solid blue;
+    }
+    div.day:nth-child(7) {
+        border-right: none;
+    }
 }

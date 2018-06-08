@@ -24,12 +24,10 @@ export class LoginPage {
     public alertCtrl: AlertController,
     public translateService: TranslateService) {
 
-    // Should getCredential() be in here or in ionViewDidLoad or ionViewDidEnter?
-    // No matter where, it would be done twice. Don't konw why!
     user.getCredential().then(cred=>{
       this.account.user = cred.user;
       this.account.password = cred.password;
-      console.log('LoginPage constructor: Load cred', cred);
+      console.log('LoginPage constructor: Load cred');
     });
   }
 

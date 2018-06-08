@@ -4,6 +4,7 @@ import { IonicPage, NavController } from 'ionic-angular';
 
 import { Tab1Root, Tab2Root, Tab3Root } from '../';
 import { SubordinatesPage } from '../subordinates/subordinates';
+import { MyTimesheetPage } from '../my-timesheet/my-timesheet';
 
 @IonicPage()
 @Component({
@@ -11,10 +12,14 @@ import { SubordinatesPage } from '../subordinates/subordinates';
   templateUrl: 'tabs.html'
 })
 export class TabsPage {
+  tabRootMyTSS: any = MyTimesheetPage;
+  tabRootSubordinates: any = SubordinatesPage;
+  tabTitleMyTSS = " ";
+  tabTitleSubordinates = " ";
+
   tab1Root: any = Tab1Root;
   tab2Root: any = Tab2Root;
   tab3Root: any = Tab3Root;
-  tab4Root: any = SubordinatesPage;
 
   tab1Title = " ";
   tab2Title = " ";
@@ -24,6 +29,10 @@ export class TabsPage {
     translateService.get(['TAB1_TITLE', 'TAB2_TITLE', 'TAB3_TITLE']).subscribe(values => {
       this.tab1Title = values['TAB1_TITLE'];
       this.tab2Title = values['TAB2_TITLE'];
+      this.tab3Title = values['TAB3_TITLE'];
+    });
+    translateService.get(['MY_TIMESHEET', 'TAB3_TITLE']).subscribe(values => {
+      this.tabTitleMyTSS = values['MY_TIMESHEET'];
       this.tab3Title = values['TAB3_TITLE'];
     });
   }

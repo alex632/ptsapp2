@@ -1,4 +1,6 @@
 <!--
+  主管审视部属工时的页面
+
   Generated template for the SubordinateReviewPage page.
 
   See http://ionicframework.com/docs/components/#navigation for more info on
@@ -15,41 +17,56 @@
     </ion-buttons>
   </ion-navbar>
 
+  <ion-segment [(ngModel)]="timeSheetStyle">
+    <ion-segment-button value="chart">
+      <ion-icon name="pie"></ion-icon> {{ 'CHART_BUTTON' | translate }}
+    </ion-segment-button>
+    <ion-segment-button value="list">
+      <ion-icon name="list"></ion-icon> {{ 'LIST_BUTTON' | translate }}
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-item>
+      <ion-avatar item-start>
+          <img src="https://pts.wistron.com/~pts/dispatcher/account/account_photo.php?action=get_photo&to=get_user_photo&id={{member.id}}">
+        </ion-avatar>
+    {{member.user.user_info.dept_name}}
+    <strong>{{member.user.user_info.name}}</strong><!-- (UID:{{member.id}})-->
+    <ion-note item-end>{{week.start_date}}</ion-note>
+  </ion-item>
+
 </ion-header>
 
-
 <ion-content padding>
-  <ion-list>
-    <ion-item>
-      {{member.user.user_info.dept_name}}
-      <strong>{{member.user.user_info.name}}</strong> ({{member.id}})
-      <ion-note item-end>{{week.start_date}}</ion-note>
-    </ion-item>
-  </ion-list>
-
-  <div>
-    <ion-segment [(ngModel)]="timeSheetStyle">
-      <ion-segment-button value="chart">
-        <ion-icon name="pie"></ion-icon> Chart
-      </ion-segment-button>
-      <ion-segment-button value="list">
-        <ion-icon name="list"></ion-icon> List
-      </ion-segment-button>
-    </ion-segment>
-  </div>
 
   <div [ngSwitch]="timeSheetStyle">
     <ion-list *ngSwitchCase="'chart'">
       <ion-item>
-        <h2>Task1 by chart</h2>
+        <h1>图表还没做好，期待吧！</h1>
       </ion-item>
     </ion-list>
-    <ion-list *ngSwitchCase="'list'">
-      <h2>Task1 by List</h2>
-      <ion-item *ngFor="let ts of timesheet">
-        <b>{{ts.description}}</b> {{ts.project_name}}
-      </ion-item>
-    </ion-list>
+    <div *ngSwitchCase="'list'">
+      <ion-item-group *ngFor="let ts of timesheet">
+        <ion-item-divider color="light">{{ts.project_name}}</ion-item-divider>
+        <ion-item>{{ts.description}}</ion-item>
+        <!--<ion-item>{{ts.category_type}}</ion-item>
+        <ion-item>{{ts.category_name}}</ion-item>-->
+        <div class="week">
+          <div class="day">{{ts.mon}}</div>
+          <div class="day">{{ts.tue}}</div>
+          <div class="day">{{ts.wed}}</div>
+          <div class="day">{{ts.thu}}</div>
+          <div class="day">{{ts.fri}}</div>
+          <div class="day">{{ts.sat}}</div>
+          <div class="day">{{ts.sun}}</div>
+        </div>
+      </ion-item-group>
+    </div>
   </div>
-  
+
 </ion-content>
+
+<ion-footer>
+  <button ion-button (click)="approve()">Approve</button>
+  <button ion-button color="danger" (click)="reject()">Reject</button>
+</ion-footer>

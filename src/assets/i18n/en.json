@@ -1,6 +1,9 @@
 {
   "EMPLOYEE_ID": "Employee ID",
-
+  "CHART_BUTTON": "Chart",
+  "LIST_BUTTON": "List",
+  "MY_TIMESHEET": "My Time Sheet",
+ 
   "BACK_BUTTON_TEXT": "Back",
 
   "NAME": "Name",

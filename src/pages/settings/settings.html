@@ -8,6 +8,16 @@
 
 <ion-content>
 
+  <ion-item>
+    <ion-avatar item-start>
+      <img src="https://pts.wistron.com/~pts/dispatcher/account/account_photo.php?action=get_photo&to=get_user_photo&id={{myUID}}">
+    </ion-avatar>
+    I am who I am.
+    <ion-buttons end>
+      <button ion-button color="danger" (click)="logout()">Logout</button>
+    </ion-buttons>
+  </ion-item>
+
   <form [formGroup]="form" *ngIf="settingsReady">
     <ion-list *ngIf="page == 'main'">
       <ion-item>
@@ -30,7 +40,7 @@
       </ion-item>
 
       <ion-item>
-        <ion-label>Server URL</ion-label>
+        <ion-label>Server URL (Not yet!)</ion-label>
         <ion-input formControlName="serverUrl"></ion-input>
       </ion-item>
 

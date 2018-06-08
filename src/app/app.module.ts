@@ -14,6 +14,7 @@ import { Settings, User, Api } from '../providers';
 import { MyApp } from './app.component';
 import { SubordinatesProvider } from '../providers/subordinates/subordinates';
 import { SubordinatesPage } from '../pages/subordinates/subordinates';
+import { MyTimesheetPage } from '../pages/my-timesheet/my-timesheet';
 
 // The translate loader needs to know where to load i18n files
 // in Ionic's static asset pipeline.
@@ -40,6 +41,7 @@ export function provideSettings(storage: Storage) {
 @NgModule({
   declarations: [
     MyApp,
+    MyTimesheetPage,
     SubordinatesPage
   ],
   imports: [
@@ -58,6 +60,7 @@ export function provideSettings(storage: Storage) {
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
+    MyTimesheetPage,
     SubordinatesPage
   ],
   providers: [

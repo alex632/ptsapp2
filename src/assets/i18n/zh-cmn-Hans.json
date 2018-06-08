@@ -1,5 +1,8 @@
 {
   "EMPLOYEE_ID": "工号",
+  "CHART_BUTTON": "图表",
+  "LIST_BUTTON": "列表",
+  "MY_TIMESHEET": "我的工作日志",
 
   "BACK_BUTTON_TEXT": "回退",
 

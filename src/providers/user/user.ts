@@ -59,21 +59,6 @@ export class User {
     $ openssl rsa -pubout -in rsa_1024_priv.pem -out rsa_1024_pub.pem
    */
   private privateKey =
-    /*
-    "MIICXQIBAAKBgQDbAQJk9w6OWSH9B73hGwYbAmBqPyWWpK1LQmCO3e/KLqMwgWfR"+
-    "dUY/7CDN4A6hQJb2wO6G9yOcaJibnCsmMdlKZogbPO5FhXzTzx3VvYyUMiCW+uIT"+
-    "jgqwoYHmGVISxX/qskUo5dSdF0dZoitgr0NRFel8wFZn65bZJzI8qQY75wIDAQAB"+
-    "AoGASsAIci/FXx7bNANNcyUHK3bfM8SD7uwcXiC01m64JtlOSAMTTXHq3WyaMcr1"+
-    "E2L5ZBWsFJMMK5mj5REjxTCkile3aWhOPC8UvIAm/n5UmcpLZs+CZz3JyMC8o4s5"+
-    "FpgRwEK9QEulyvxK9EbL6qQhpbv+6+r32XrCrqWRjeujLHkCQQD24XwnkHeX/+YO"+
-    "dFgBmcZ9OrELcILNfTVZ9VqCX+wTms7mzaoEYe0o0OQVp49bAO2fl3AeRoR/3xZw"+
-    "3Ab6OyqTAkEA4xfrbq7Em7rkv0KcJlK6rP/Lsb6OCaLpJrvAEFdJmTpyHUbp6PFt"+
-    "RE7VBWCKf8d0RzJE6v0Oo6rtP42MnMF53QJBAJG0nMjg+6Rq9EU9px8yubH5LLp6"+
-    "qchLiGxSYRunLzaW3Fvdr+UsQoMfXi3lmbb1Akl5YEOODO9HJABx63BN8R8CQQCS"+
-    "pM+TGag8J+Ou3gSXerSxIj0W+kYeUuTb7kGIS9Vq7SLjZPeHRN+aTI2ie0T0Xofn"+
-    "sb5vQBpD9gxeDbnPP+DBAkAya+MHoMjX2wAppySWtp511td35YfFf4AXxrRdFHf2"+
-    "sjfaBeQfblwzuVnpNzNy8k8vuhbpxGDEPjBPTxreJ9+B";
-    */
     "MIICXgIBAAKBgQDlmvU/tehsFNDPbnx8M28JxwsbPV0hNxDMFT2xCy2lEm5cDGBf"+
     "4YLvVB6XNY/jg4u27I3ad9CkPqXJQY0Ramn02zT4rYfts++DzY8cPZwLSAMm1q+8"+
     "UrFb80/Bc/S7UrcxGPNkw43+7s4bxSZW4JkezulO+JDWvQHynNu4rW5xUQIDAQAB"+
@@ -103,7 +88,7 @@ export class User {
       }
     ).subscribe((res: any) => {
       if (res.headers.get('Content-Length')==='0') {
-        console.log('Login to PRD succeeded.', res);
+        //console.log('Login to PRD succeeded.', res);
       } else {
         console.log('Login to PRD failed.', res);
       }
@@ -119,20 +104,19 @@ export class User {
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }
       ).subscribe((res: any) => {
-        // Response text can be formed as an object {}
-        // If the API returned a successful response, mark the user as logged in
         //console.log(res.headers.get('Set-Cookie'));     // null, Cookie not gettable!
-        //console.log(res.headers.get('Content-Length')); // Expect: 0
         //console.log(res.headers.get('Content-Type'));   // Expect: text/html; charset=UTF-8
         if (res.headers.get('Content-Length')==='0') {
-          console.log('Login succeeded.', res);
-          observer.next('OK');
-          this.setCredential(accountInfo);
+          //console.log('Login succeeded.', res);
+          this.setCredential(accountInfo).then(()=>{
+            observer.next('OK');
+          })
+          this.getMyUID();
         } else {
-          console.log('Login failed.', res);
+          console.log('Login failed.', res);  //NOTE: Couldn't get here???
           observer.next('NG');
         }
-        observer.complete();
+        //observer.complete();
         /*
         if (res.status == 'success') {
           this._loggedIn(res);
@@ -151,11 +135,19 @@ export class User {
         }
         //console.error('Login ERROR', err);
         //console.error('err.error.text', err.error.text);
-        observer.complete();
+        //observer.complete();
       });
     });
 
     //return seq;
+  }
+
+  getMyUID() {
+    this.api.get('/~pts/subsystem/tss/web_pages/application/iframe/my_task_table.php',
+      {'webmode': 'j'}).subscribe(resp=>{
+        //console.log("My UID:", resp['use_id']);
+        this.storage.set('$MyUID$', resp['use_id']);
+    });
   }
 
   getCredential() {
@@ -175,13 +167,7 @@ export class User {
     return this.storage.set(this.keyStorage, crypt.encrypt(JSON.stringify(accountInfo)));
   }
   
-  getInfoTest() {
-    // Get Fibby's info.
-    let seq = this.http.get('http://10.43.146.38/~pts/subsystem/tss/web_pages/application/subordinate_review.php?format=json&date=2018-04-23&user_id=1497302818314666');
-    seq.subscribe((res: any) => {
-      console.log(res);
-    });
-  }
+  //NOTE: to delete...
   /**
    * Send a POST request to our signup endpoint with the data
    * the user entered on the form.

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
+import { TranslateModule } from '@ngx-translate/core';
 import { SubordinateReviewPage } from './subordinate-review';
 
 @NgModule({
@@ -8,6 +9,7 @@ import { SubordinateReviewPage } from './subordinate-review';
   ],
   imports: [
     IonicPageModule.forChild(SubordinateReviewPage),
+    TranslateModule.forChild()
   ],
 })
 export class SubordinateReviewPageModule {}
