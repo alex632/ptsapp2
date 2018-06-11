@@ -6,7 +6,7 @@
 -->
 <ion-header>
   <ion-navbar>
-    <ion-title>Subordinates</ion-title>
+    <ion-title>{{ 'SUB_TIMESHEET' | translate }}</ion-title>
     <ion-buttons end>
       <button ion-button icon-only (click)="refresh()">
         <ion-icon name="refresh"></ion-icon>
@@ -18,7 +18,7 @@
 <ion-content>
 
   <ion-list>
-    <ion-list-header>直屬的部門成員</ion-list-header>
+    <ion-list-header>{{ 'DIRECT_MEMBERS' | translate }}</ion-list-header>
     <ion-item *ngFor="let member of myMembers">
       <ion-avatar item-start>
         <img src="https://pts.wistron.com/~pts/dispatcher/account/account_photo.php?action=get_photo&to=get_user_photo&id={{member.id}}">
@@ -38,7 +38,7 @@
   </ion-list>
 
   <ion-list>
-    <ion-list-header>直屬的部門主管</ion-list-header>
+    <ion-list-header><b>{{ 'DIRECT_HEADS' | translate }}</b></ion-list-header>
     <ion-item *ngFor="let member of subHeads">
       <!--<b>{{member.user.user_info.name}}</b> <span>{{member.user.user_info.dept_name}}</span>-->
       <ion-avatar item-start>
@@ -61,7 +61,7 @@
   </ion-list>
 
   <ion-list>
-    <ion-list-header>部門</ion-list-header>
+    <ion-list-header>{{ 'SUB_DEPARTMENTS' | translate }}</ion-list-header>
   </ion-list>
   <!--<ion-label>部門</ion-label>-->
   <div class="dept-container">

@@ -16,6 +16,7 @@ import { SubordinatesProvider } from '../../providers/subordinates/subordinates'
 })
 export class SubordinatesPage {
   Object = Object;
+  deptId: number;
   myMembersInfo: any;
   myMembers: Array<any>;
   subHeadsInfo: any;
@@ -23,6 +24,8 @@ export class SubordinatesPage {
   subDepartments: Object = {};
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public events: Events, public subordinates: SubordinatesProvider) {
+    this.deptId = navParams.get('deptId');
+    console.log(`deptId=${this.deptId}`);
   }
 
   /**
@@ -62,20 +65,21 @@ export class SubordinatesPage {
     }
 
     console.log('ionViewDidLoad SubordinatesPage');
-    this.subordinates.getMembers().subscribe(obj=>{
+    this.subordinates.getMembers(this.deptId).subscribe(obj=>{
       this.myMembersInfo = obj;
       this.myMembers = this.myMembersInfo.data.members;
       setAllWeeksIcon(this.myMembers);
-      console.log('myMembersInfo', obj);
+      console.log('membersInfo', obj);
     });
-    this.subordinates.getSubHeads().subscribe(obj=>{
+    this.subordinates.getSubHeads(this.deptId).subscribe(obj=>{
       this.subHeadsInfo = obj;
       this.subHeads = this.subHeadsInfo.data.members;
       setAllWeeksIcon(this.subHeads);
       console.log('subHeadsInfo', this.subHeadsInfo);
     });
-    this.subordinates.getSubDepartments().then(obj => {
+    this.subordinates.getSubDepartments(this.deptId).subscribe(obj => {
       this.subDepartments = obj;
+      console.log('subDepartments', this.subDepartments);
     });
   }
 
@@ -88,7 +92,7 @@ export class SubordinatesPage {
   }
 
   refresh() {
-    this.events.publish('subordinates-refresh-requested');
+    this.events.publish('subordinates-refresh');
   }
 
   openWeek(week, member) {
@@ -100,6 +104,9 @@ export class SubordinatesPage {
   }
 
   openDept(dept) {
-    console.log('Enter dept', dept);
+    //console.log('Enter dept', dept);
+    this.navCtrl.push('SubordinatesPage', {
+      deptId: dept.id
+    });
   }
 }

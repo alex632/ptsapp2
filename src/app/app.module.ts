@@ -13,7 +13,7 @@ import { Items } from '../mocks/providers/items';
 import { Settings, User, Api } from '../providers';
 import { MyApp } from './app.component';
 import { SubordinatesProvider } from '../providers/subordinates/subordinates';
-import { SubordinatesPage } from '../pages/subordinates/subordinates';
+import { SubordinatesPageModule } from '../pages/subordinates/subordinates.module';
 import { MyTimesheetPage } from '../pages/my-timesheet/my-timesheet';
 
 // The translate loader needs to know where to load i18n files
@@ -42,7 +42,6 @@ export function provideSettings(storage: Storage) {
   declarations: [
     MyApp,
     MyTimesheetPage,
-    SubordinatesPage
   ],
   imports: [
     BrowserModule,
@@ -55,13 +54,13 @@ export function provideSettings(storage: Storage) {
       }
     }),
     IonicModule.forRoot(MyApp),
+    SubordinatesPageModule,
     IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
     MyTimesheetPage,
-    SubordinatesPage
   ],
   providers: [
     Api,

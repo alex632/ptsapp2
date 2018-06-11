@@ -12,9 +12,10 @@ import { Events } from 'ionic-angular';
 */
 @Injectable()
 export class SubordinatesProvider {
-  private MEMBERS_STORAGE_KEY: string = '_myMembers';
-  private SUBHEADS_STORAGE_KEY: string = '_mySubHeads';
-  private SUBDEPARTMENTS_STORAGE_KEY: string = '_mySubDepartments';
+  //private MEMBERS_STORAGE_KEY: string = '_myMembers';
+  //private SUBHEADS_STORAGE_KEY: string = '_mySubHeads';
+  //private SUBDEPARTMENTS_STORAGE_KEY: string = '_mySubDepartments';
+  private refreshEvent: string = 'subordinates-refresh';
 
   constructor(public api: Api, public storage: Storage, public events: Events) {
     //console.log('Hello SubordinatesProvider Provider');
@@ -51,13 +52,18 @@ export class SubordinatesProvider {
         }
       }
    */
-  getPeople(storage_key, kind) {
-    let refresh = (storage_key, kind) => {
+  getPeople(storage_key, kind, deptId) {
+
+    let refresh = (storage_key, kind, deptId) => {
       return new Promise((resolve, reject) => {
         // 當非同步作業成功時，呼叫 resolve(...),而失敗時則呼叫 reject(...)。
-        this.api.get('/~pts/subsystem/tss/web_pages/application/subordinate.php', {
+        let param = {
           'webmode': 'j', 'action': 'my_department_member_table', 'type': kind
-        }).subscribe(resp=>{
+        };
+        if (deptId) {
+          param['dept_id'] = deptId;
+        }
+        this.api.get('/~pts/subsystem/tss/web_pages/application/subordinate.php', param).subscribe(resp=>{
           // Process the data given by server
           let d0 : Array<any> = resp["weekly_data"];  //NOTE:  Must be an array. What if error?
           let du = [];
@@ -65,37 +71,47 @@ export class SubordinatesProvider {
           for (let j=4, i=d0.length-1; j>=0 && i>=0; j--,i--) {
             du[j] = {start: d0[i]["start"], end: d0[i]["end"], year: d0[i]["this_year"]}
           }
-          let obj = resp['lower_list'][kind]; //NOTE: What if error?
+          let obj = resp['lower_list'][kind]; //NOTE: What if error? Could be null. "dept_head":null
           let mary = [];  // Member Array Ha!
           for (let uid in obj) {  // Iterate elements of the object in ascending order of key.
             let m = {id: uid, user: {user_info: obj[uid].user_info, data: []}};
             let d0 : Array<any> = obj[uid].data; //NOTE:  Must be an array. What if error?
+            // Keep only the last 5
             for (let j=4, i=d0.length-1; j>=0 && i>=0; j--,i--) {
               m.user.data[j] = {start_date: d0[i].start_date, status: d0[i].status};
             }
             mary.push(m);
           }
           mary.sort((a,b)=>{ // Sort the array by department name in ascending order
+            // Sort by dept_name then name
             if (a.user.user_info.dept_name < b.user.user_info.dept_name)
               return -1;
             if (a.user.user_info.dept_name > b.user.user_info.dept_name)
               return 1;
-            //NOTE: compare the second key, user's name?
+            /*
+            if (a.user.user_info.name < b.user.user_info.name)
+              return -1;
+            if (a.user.user_info.name > b.user.user_info.name)
+              return 1;
+            */
             return 0;
           });
           let info = {time: new Date(), data: {duration: du, members:mary}};
           this.storage.set(storage_key, info).then(() => {
             resolve(info);
           });
-          console.log(`Got ${kind} from server`, info.time, info.time.toLocaleDateString());
+          console.log(`Got ${storage_key} from server`, info.time, info.time.toLocaleDateString(), info);
+        }, err=>{
+          console.log(`Get ${storage_key} from server ERROR`, err);
         });
       });
     };
 
     return Observable.create(observer => {
-      this.events.subscribe('subordinates-refresh-requested', () => {
-        console.log(`Refresh ${kind} at ${new Date()}`);
-        refresh(storage_key, kind).then((obj) => {
+
+      this.events.subscribe(this.refreshEvent, () => {
+        console.log(`Refresh ${storage_key} at ${new Date()}`);
+        refresh(storage_key, kind, deptId).then((obj) => {
           observer.next(obj);
         });
       });
@@ -108,9 +124,10 @@ export class SubordinatesProvider {
         if (obj && obj.time && obj.data && obj.data.duration && obj.data.members) {
           //console.log(`get ${kind} HIT`);
           observer.next(obj); // return data to consumer
+          //refresh();  //NOTE: refresh now?
         } else {
           //console.log(`get ${kind} MISS`);
-          refresh(storage_key, kind).then((obj) => {
+          refresh(storage_key, kind, deptId).then((obj) => {
             observer.next(obj);  // return data to consumer
           });
         }
@@ -119,12 +136,16 @@ export class SubordinatesProvider {
   }
 
   // 直屬的部門成員
-  getMembers() {
-    return this.getPeople(this.MEMBERS_STORAGE_KEY, 'member');
+  getMembers(deptId) {
+    let storageKey = "members-0";  // Direct Department Members
+    if (deptId) {
+      storageKey = `members-${deptId}`;  // Sub Department Members
+    }
+    return this.getPeople(storageKey, 'member', deptId);
   }
 
   // 直屬的部門主管
-  getSubHeads() {
+  getSubHeads(deptId) {
     /* NOTE: when to clear storage except _settings ?
     this.storage.forEach( (value, key, index) => {
       console.log("This is the value", value);
@@ -132,8 +153,11 @@ export class SubordinatesProvider {
       console.log("Index is", index);
     });
     */
-
-    return this.getPeople(this.SUBHEADS_STORAGE_KEY, 'dept_head');
+    let storageKey = "subHeads-0";  // Direct Department Heads
+    if (deptId) {
+      storageKey = `subHeads-${deptId}`;  // Sub Department Members
+    }
+    return this.getPeople(storageKey, 'dept_head', deptId);
   }
 
   /*
@@ -143,15 +167,26 @@ export class SubordinatesProvider {
         data: [     // sorted by department name instead of department id in ascending order
           {id: '317', name: 'MRS100', managerId: '864'},
           {id: '137', name: 'MRS600', managerId: '3180'}          
-        ]
+        ],
+        review_data_count: 22
       }
    */
-  getSubDepartments() {
-    let refresh = () => {
+  getSubDepartments(deptId) {
+    let storageKey = "subDepts-0";  // Direct Sub Departments
+    if (deptId) {
+      storageKey = `subDepts-${deptId}`;  // Sub Sub Departments
+    }
+
+    let refresh = (storageKey, deptId) => {
       return new Promise((resolve, reject) => {
-        //NOTE: Doesn't handle network error yet!
-        this.api.get('/~pts/subsystem/tss/web_pages/application/subordinate.php', {'webmode': 'j'}).subscribe(resp=>{
-          let depts = resp['my_management_dept'];
+        let param = {
+          'webmode': 'j'
+        };
+        if (deptId) {
+          param['dept_id'] = deptId;
+        }
+        this.api.get('/~pts/subsystem/tss/web_pages/application/subordinate.php', param).subscribe(resp=>{
+          let depts = resp['my_management_dept']; //NOTE: Could be null
           /*
             Format of depts :
             {
@@ -171,14 +206,18 @@ export class SubordinatesProvider {
               return 1;
             return 0;
           });
-          let info = {time: new Date(), data: ary};
-          this.storage.set(this.SUBDEPARTMENTS_STORAGE_KEY, info).then(() => {
+          let info = {time: new Date(), data: ary, review_data_count: resp['review_data_count']};
+          this.storage.set(storageKey, info).then(() => {
             resolve(info);
           });
-          console.log('Sub depts got from server', info.time, info.time.toLocaleDateString());
+          console.log(`Got ${storageKey} from server`, info.time, info.time.toLocaleDateString(), info);
+        }, err=>{
+          //NOTE: Doesn't handle network error yet!
+          console.log(`Got ${storageKey} from server ERROR`);
         });
       });
     };
+    /*
     return new Promise((resolve, reject) => {
       this.storage.get(this.SUBDEPARTMENTS_STORAGE_KEY).then((obj) => {
         if (obj && obj.time) {
@@ -192,6 +231,31 @@ export class SubordinatesProvider {
           });
         }
       });
+    });
+    */
+
+    return Observable.create(observer => {
+
+      this.events.subscribe(this.refreshEvent, () => {
+        console.log(`Refresh ${storageKey} at ${new Date()}`);
+        refresh(storageKey, deptId).then((obj) => {
+          observer.next(obj);
+        });
+      });
+
+      this.storage.get(storageKey).then((obj) => {
+        if (obj && obj.time && obj.data && obj.review_data_count) {
+          //console.log('getSubDepartments HIT');
+          observer.next(obj);
+          //refresh();  //NOTE: refresh now?
+        } else {
+          //console.log('getSubDepartments MISS');
+          refresh(storageKey, deptId).then((obj) => {
+            observer.next(obj);
+          });
+        }
+      });
+
     });
   }
 
