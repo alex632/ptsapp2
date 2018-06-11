@@ -17,11 +17,16 @@ import { SubordinatesProvider } from '../../providers/subordinates/subordinates'
   templateUrl: 'subordinate-review.html',
 })
 export class SubordinateReviewPage {
-  tsObj: any;
+  //tsInfo: any;
+  //tsObj: any;
   timesheet: Array<any>;
   member: any;
   week: any;
   timeSheetStyle: string;
+  showApprove: boolean = false;
+  showReject: boolean = false;
+  showReturn: boolean = false;
+  rejectReason: string = "";
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public events: Events, public subordinates: SubordinatesProvider) {
     this.member = navParams.get('member');
@@ -31,12 +36,18 @@ export class SubordinateReviewPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad SubordinateReviewPage');
     this.subordinates.getTimeSheet(this.member.id, this.week.start_date).subscribe(obj=>{
-      this.tsObj = obj.data.task_data || {};
-      console.log(`Got Timesheet @${obj.time}`, this.tsObj);
+      //this.tsInfo = obj;
+      let tsObj = obj.data.task_data || {};
+      console.log(`Got Timesheet @${obj.time}`, obj);
       this.timesheet = [];
-      for (let i of Object.keys(this.tsObj)) {
-        this.timesheet.unshift(this.tsObj[i]);
+      for (let i of Object.keys(tsObj)) {
+        this.timesheet.unshift(tsObj[i]);
       }
+      console.log(obj.data.show_approve, obj.data.show_reject, obj.data.show_return, obj.data.reject_reason);
+      this.showApprove = obj.data.show_approve;
+      this.showReject = obj.data.show_reject;
+      this.showReturn = obj.data.show_return;
+      this.rejectReason = obj.data.reject_reason;
     });
     
   }
@@ -56,5 +67,9 @@ export class SubordinateReviewPage {
 
   reject() {
     console.log("reject");
+  }
+
+  return() {
+    console.log("return");
   }
 }

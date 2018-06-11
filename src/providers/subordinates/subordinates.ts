@@ -100,7 +100,7 @@ export class SubordinatesProvider {
           this.storage.set(storage_key, info).then(() => {
             resolve(info);
           });
-          console.log(`Got ${storage_key} from server`, info.time, info.time.toLocaleDateString(), info);
+          console.log(`Got ${storage_key} from server`, info.time, info);
         }, err=>{
           console.log(`Get ${storage_key} from server ERROR`, err);
         });
@@ -135,7 +135,7 @@ export class SubordinatesProvider {
     });
   }
 
-  // 直屬的部門成員
+  // 获取我的 直属的部门成员
   getMembers(deptId) {
     let storageKey = "members-0";  // Direct Department Members
     if (deptId) {
@@ -144,7 +144,7 @@ export class SubordinatesProvider {
     return this.getPeople(storageKey, 'member', deptId);
   }
 
-  // 直屬的部門主管
+  // 获取我的 直属的部门主管
   getSubHeads(deptId) {
     /* NOTE: when to clear storage except _settings ?
     this.storage.forEach( (value, key, index) => {
@@ -160,7 +160,7 @@ export class SubordinatesProvider {
     return this.getPeople(storageKey, 'dept_head', deptId);
   }
 
-  /*
+  /* 获取我的 下属部门
     Data format of sub-departments information:
       {
         time: '2018-05-24 09:15:01',  // when the data obtained from server
@@ -210,7 +210,7 @@ export class SubordinatesProvider {
           this.storage.set(storageKey, info).then(() => {
             resolve(info);
           });
-          console.log(`Got ${storageKey} from server`, info.time, info.time.toLocaleDateString(), info);
+          console.log(`Got ${storageKey} from server`, info.time, info);
         }, err=>{
           //NOTE: Doesn't handle network error yet!
           console.log(`Got ${storageKey} from server ERROR`);
@@ -259,7 +259,7 @@ export class SubordinatesProvider {
     });
   }
 
-  /*
+  /* 获取某人的工时资讯
     Data format of time sheet:
       {
         time: '2018-06-03 01:00:21',  // when the data obtained from server
@@ -286,7 +286,16 @@ export class SubordinatesProvider {
               ...
             },
             ...
-          }
+          },
+          "tast_status":"Reject", // "Review", "Draft", null
+          "week_data":{"start":"2018-05-28","end":"2018-06-03"},
+          "first_date":"2018-05-28",
+          "prev_date":"2018-05-21",
+          "next_date":"2018-06-04",
+          "reject_reason":"Just for test",
+          "show_approve":false,
+          "show_reject":false,
+          "show_return":false,
         }
       }
    */
@@ -303,7 +312,7 @@ export class SubordinatesProvider {
           this.storage.set(storageKey, info).then(() => {
             resolve(info);
           });
-          console.log(`Got timesheet of ${uid} @ ${startMonday} from server`, info.time, info.time.toLocaleDateString());
+          console.log(`Got timesheet of ${uid} @ ${startMonday} from server`, info);
         });
       });
     };

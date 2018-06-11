@@ -42,7 +42,7 @@
   <div [ngSwitch]="timeSheetStyle">
     <ion-list *ngSwitchCase="'chart'">
       <ion-item>
-        <h1>图表还没做好，期待吧！</h1>
+        <h1>图表还没做好，敬请期待。</h1>
       </ion-item>
     </ion-list>
     <div *ngSwitchCase="'list'">
@@ -67,6 +67,8 @@
 </ion-content>
 
 <ion-footer>
-  <button ion-button (click)="approve()">Approve</button>
-  <button ion-button color="danger" (click)="reject()">Reject</button>
+  <ion-item *ngIf="rejectReason">退回理由: <b>{{rejectReason}}</b></ion-item>
+  <button ion-button *ngIf="showApprove" (click)="approve()">Approve</button>
+  <button ion-button *ngIf="showReject" color="danger" (click)="reject()">Reject</button>
+  <button ion-button *ngIf="showReturn" color="danger" (click)="return()">Return</button>
 </ion-footer>
