@@ -52,7 +52,8 @@ export class LoginPage {
     this.user.login(this.account).subscribe((resp) => {
       loader.dismiss();
       if (resp=='OK') {
-        this.navCtrl.push('TabsPage');
+        //this.navCtrl.push('TabsPage');
+        this.navCtrl.setRoot('TabsPage');
       } else /*if (resp=='NG')*/ {
         //resp.error.text === 'RELOAD'  // You've been blocked. // You can't login system within minutes!
         this.translateService.get('LOGIN_ERROR').subscribe((value) => {
