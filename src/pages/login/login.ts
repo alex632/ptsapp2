@@ -45,7 +45,7 @@ export class LoginPage {
     
     let loader = this.loadingCtrl.create({
       content: "Please wait...",  //NOTE: should use translateService.get
-      duration: 33000
+      duration: 13000
     });
     loader.present();
     
@@ -53,16 +53,18 @@ export class LoginPage {
       loader.dismiss();
       if (resp=='OK') {
         this.navCtrl.push(MainPage);
-      } else if (resp=='NG') {
+      } else /*if (resp=='NG')*/ {
+        //resp.error.text === 'RELOAD'  // You've been blocked. // You can't login system within minutes!
         this.translateService.get('LOGIN_ERROR').subscribe((value) => {
           let toast = this.toastCtrl.create({
-            message: value,
-            duration: 4000,
+            //title: value,
+            message: `${resp.headers.get('content-length')} ${resp.error.text}`,
+            duration: 8000,
             position: 'top'
           });
           toast.present();
         })
-      } else if (resp=='ERROR') {
+      }/* else if (resp=='ERROR') {
         let toast = this.toastCtrl.create({
           message: 'It may be network error.',
           duration: 1000,
@@ -70,8 +72,8 @@ export class LoginPage {
         });
         toast.present();
       } else {
-        
-      }
+
+      }*/
     });
   }
 }

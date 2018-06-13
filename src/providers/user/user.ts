@@ -1,5 +1,5 @@
 //import 'rxjs/add/operator/toPromise';
-import { HttpClient, HttpParams } from '@angular/common/http';  //NOTE: I need HTTP response headers that api provider can't give me.
+import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';  //NOTE: I need HTTP response headers that api provider can't give me.
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Storage } from '@ionic/storage';
@@ -93,7 +93,7 @@ export class User {
         console.log('Login to PRD failed.', res);
       }
     }, err => {
-        console.error('Login to PRD ERROR', err);
+        console.error('Login to PRD ERROR');
     });
 
     return Observable.create(observer => {
@@ -125,16 +125,18 @@ export class User {
           console.log('Login failed.', res);
         }
         */
-      }, err => {   // Unable to get a response of json format
-        if (err.status == '200') {
-          if (err.headers.get('Content-Length')==='0') {
+      }, (err: HttpErrorResponse) => {   // Unable to get a response of json format
+        console.log(err);
+        if (err.status == 200) {
+          if (err.headers.get('content-length')==='0') {
             this.setCredential(accountInfo).then(()=>{
             observer.next('OK');
           })
           this.getMyUID();
           }
           // Definite error: username/password wrong
-          observer.next('NG');
+          //observer.next('NG');
+          observer.next(err);
         } else {
           // Maybe network errror
           observer.next('ERROR');
