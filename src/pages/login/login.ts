@@ -53,7 +53,25 @@ export class LoginPage {
       loader.dismiss();
       if (resp=='OK') {
         //this.navCtrl.push('TabsPage');
-        this.navCtrl.setRoot('TabsPage');
+        let alert = this.alertCtrl.create({
+          title: 'Login OK',
+          message: 'Jump to main page?',
+          buttons: [
+            {
+              text:'OK',
+              handler: () => {
+                this.navCtrl.push('TabsPage');
+                console.log('Cancel clicked');
+              }
+            },
+            {
+              text:'Nop',
+              handler: () => {}
+            }
+          ]
+        });
+        alert.present();
+        //this.navCtrl.setRoot('TabsPage');
       } else /*if (resp=='NG')*/ {
         //resp.error.text === 'RELOAD'  // You've been blocked. // You can't login system within minutes!
         this.translateService.get('LOGIN_ERROR').subscribe((value) => {
