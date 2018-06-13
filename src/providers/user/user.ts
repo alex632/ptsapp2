@@ -35,6 +35,7 @@ export class User {
    * Send a POST request to our login endpoint with the data
    * the user entered on the form.
    */
+  //NOTE: to be deleted.
   login_old(accountInfo: any) { //NOTE: to be deleted.
     let seq = this.api.post('login', accountInfo).share();
 
@@ -87,14 +88,11 @@ export class User {
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
       }
     ).subscribe((res: any) => {
-      if (res.headers.get('Content-Length')==='0') {
-        //console.log('Login to PRD succeeded.', res);
-      } else {
-        console.log('Login to PRD failed.', res);
-      }
+        console.log('Login to PRD succeeded.', res);
     }, err => {
-        console.error('Login to PRD ERROR');
+        console.error('Login to PRD ERROR.', err);
     });
+    //NOTE: to be deleted.
 
     return Observable.create(observer => {
       this.http.post('http://10.43.146.37/~pts/model/public_service.php?action=check_login',
@@ -104,19 +102,18 @@ export class User {
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }
       ).subscribe((res: any) => {
-        //console.log(res.headers.get('Set-Cookie'));     // null, Cookie not gettable!
-        //console.log(res.headers.get('Content-Type'));   // Expect: text/html; charset=UTF-8
-        if (res.headers.get('Content-Length')==='0') {
-          //console.log('Login succeeded.', res);
-          this.setCredential(accountInfo).then(()=>{
-            observer.next('OK');
-          })
-          this.getMyUID();
-        } else {
-          console.log('Login failed.', res);  //NOTE: Couldn't get here???
-          observer.next('NG');
-        }
-        //observer.complete();
+        // JSON result obtained including empty. It's empty in this case.
+        // On iOS, it looks like only 'Content-Type' gettable. Others such as 'Content-Length', 'Server', 'X-Powered-By' all null.
+        // console.log(res.headers.get('Set-Cookie'));     // null, Cookie not gettable on Chrome or iOS.
+        console.log('Login succeeded.', res);
+        console.log(res);
+        this.setCredential(accountInfo).then(()=>{
+          this.getMyUID().subscribe(()=>{
+            
+            //observer.complete();
+          });
+          observer.next({status:'OK'});
+        });
         /*
         if (res.status == 'success') {
           this._loggedIn(res);
@@ -125,37 +122,30 @@ export class User {
           console.log('Login failed.', res);
         }
         */
-      }, (err: HttpErrorResponse) => {   // Unable to get a response of json format
+      }, (err: HttpErrorResponse) => {   // Unable to get a response of JSON format
+        console.error('Login failed.', err);
+        console.error('Login failed.', err.error.text);
         console.log(err);
         if (err.status == 200) {
-          if (err.headers.get('content-length')==='0') {
-            this.setCredential(accountInfo).then(()=>{
-            observer.next('OK');
-          })
-          this.getMyUID();
-          }
-          // Definite error: username/password wrong
-          //observer.next('NG');
-          observer.next(err);
+          observer.next({status:'NG', reason: err.error.text}); // Definite error: username/password wrong or locked.
         } else {
           // Maybe network errror
-          observer.next('ERROR');
+          console.log(err);
+          observer.next({status: 'ERROR'});
         }
-        //console.error('Login ERROR', err);
-        //console.error('err.error.text', err.error.text);
-        //observer.complete();
       });
     });
 
-    //return seq;
   }
 
   getMyUID() {
-    this.api.get('/~pts/subsystem/tss/web_pages/application/iframe/my_task_table.php',
-      {'webmode': 'j'}).subscribe(resp=>{
+    let req = this.api.get('/~pts/subsystem/tss/web_pages/application/iframe/my_task_table.php',
+      {'webmode': 'j'});
+    req.share().subscribe(resp=>{
         //console.log("My UID:", resp['use_id']);
         this.storage.set('$MyUID$', resp['use_id']);
     });
+    return req.share();
   }
 
   getCredential() {

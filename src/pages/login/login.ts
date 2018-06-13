@@ -51,7 +51,9 @@ export class LoginPage {
     
     this.user.login(this.account).subscribe((resp) => {
       loader.dismiss();
-      if (resp=='OK') {
+      console.log(resp);
+      //this.navCtrl.push('TabsPage');
+      if (resp.status=='OK') {
         //this.navCtrl.push('TabsPage');
         let alert = this.alertCtrl.create({
           title: 'Login OK',
@@ -61,7 +63,7 @@ export class LoginPage {
               text:'OK',
               handler: () => {
                 this.navCtrl.push('TabsPage');
-                console.log('Cancel clicked');
+                console.log('OK clicked');
               }
             },
             {
@@ -72,27 +74,25 @@ export class LoginPage {
         });
         alert.present();
         //this.navCtrl.setRoot('TabsPage');
-      } else /*if (resp=='NG')*/ {
+      } else if (resp.status=='ERROR') {
+        let toast = this.toastCtrl.create({
+          message: 'It may be network error.',
+          duration: 8000,
+          position: 'top'
+        });
+        toast.present();
+      } else if (resp.status=='NG') {
         //resp.error.text === 'RELOAD'  // You've been blocked. // You can't login system within minutes!
         this.translateService.get('LOGIN_ERROR').subscribe((value) => {
           let toast = this.toastCtrl.create({
             //title: value,
-            message: `${resp.headers.get('content-length')} ${resp.error.text}`,
+            message: `${resp.reason}`,
             duration: 8000,
             position: 'top'
           });
           toast.present();
         })
-      }/* else if (resp=='ERROR') {
-        let toast = this.toastCtrl.create({
-          message: 'It may be network error.',
-          duration: 1000,
-          position: 'top'
-        });
-        toast.present();
-      } else {
-
-      }*/
+      }
     });
   }
 }
