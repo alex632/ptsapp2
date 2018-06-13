@@ -62,13 +62,15 @@ export class LoginPage {
           });
           toast.present();
         })
-      } else {
+      } else if (resp=='ERROR') {
         let toast = this.toastCtrl.create({
           message: 'It may be network error.',
-          duration: 3000,
+          duration: 1000,
           position: 'top'
         });
         toast.present();
+      } else {
+        
       }
     });
   }

@@ -127,6 +127,12 @@ export class User {
         */
       }, err => {   // Unable to get a response of json format
         if (err.status == '200') {
+          if (err.headers.get('Content-Length')==='0') {
+            this.setCredential(accountInfo).then(()=>{
+            observer.next('OK');
+          })
+          this.getMyUID();
+          }
           // Definite error: username/password wrong
           observer.next('NG');
         } else {
