@@ -103,6 +103,7 @@ export class SubordinatesProvider {
           console.log(`Got ${storage_key} from server`, info.time, info);
         }, err=>{
           console.log(`Get ${storage_key} from server ERROR`, err);
+          console.error(err);
         });
       });
     };

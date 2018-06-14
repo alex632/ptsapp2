@@ -91,6 +91,7 @@ export class User {
         console.log('Login to PRD succeeded.', res);
     }, err => {
         console.error('Login to PRD ERROR.', err);
+        console.error(err);
     });
     //NOTE: to be deleted.
 
@@ -98,7 +99,7 @@ export class User {
       this.http.post('http://10.43.146.37/~pts/model/public_service.php?action=check_login',
         body.toString(),
         {
-          observe: 'response',  // get http headers
+          //observe: 'response',  // get http headers
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }
       ).subscribe((res: any) => {
@@ -108,11 +109,10 @@ export class User {
         console.log('Login succeeded.', res);
         console.log(res);
         this.setCredential(accountInfo).then(()=>{
-          this.getMyUID().subscribe(()=>{
-            
-            //observer.complete();
-          });
-          observer.next({status:'OK'});
+          console.log('setCredential done');
+          observer.next({status:'OK'});            
+          this.getMyUID();
+          //observer.complete();
         });
         /*
         if (res.status == 'success') {
@@ -123,9 +123,9 @@ export class User {
         }
         */
       }, (err: HttpErrorResponse) => {   // Unable to get a response of JSON format
-        console.error('Login failed.', err);
+        //console.error('Login failed.', err);
         console.error('Login failed.', err.error.text);
-        console.log(err);
+        //console.log(err);
         if (err.status == 200) {
           observer.next({status:'NG', reason: err.error.text}); // Definite error: username/password wrong or locked.
         } else {
@@ -139,13 +139,14 @@ export class User {
   }
 
   getMyUID() {
-    let req = this.api.get('/~pts/subsystem/tss/web_pages/application/iframe/my_task_table.php',
-      {'webmode': 'j'});
-    req.share().subscribe(resp=>{
-        //console.log("My UID:", resp['use_id']);
-        this.storage.set('$MyUID$', resp['use_id']);
+    this.api.get('/~pts/subsystem/tss/web_pages/application/iframe/my_task_table.php',
+      {'webmode': 'j'}).subscribe(resp=>{
+      let uid = resp['user_id'];
+      console.log("My UID:", uid);
+      this.storage.set('$MyUID$', uid).then(()=>{
+        console.log("set done, so what?");
+      });
     });
-    return req.share();
   }
 
   getCredential() {

@@ -50,49 +50,52 @@ export class LoginPage {
     loader.present();
     
     this.user.login(this.account).subscribe((resp) => {
-      loader.dismiss();
-      console.log(resp);
-      //this.navCtrl.push('TabsPage');
-      if (resp.status=='OK') {
+      loader.dismiss().then(()=>{
+        console.log("I'm in login response.");
+        console.log(resp);
+      
         //this.navCtrl.push('TabsPage');
-        let alert = this.alertCtrl.create({
-          title: 'Login OK',
-          message: 'Jump to main page?',
-          buttons: [
-            {
-              text:'OK',
-              handler: () => {
-                this.navCtrl.push('TabsPage');
-                console.log('OK clicked');
+        if (resp.status=='OK') {
+          //this.navCtrl.push('TabsPage');
+          let alert = this.alertCtrl.create({
+            title: 'Login OK',
+            message: 'Jump to main page?',
+            buttons: [
+              {
+                text:'OK',
+                handler: () => {
+                  this.navCtrl.push(MainPage);
+                  console.log('OK clicked');
+                }
+              },
+              {
+                text:'Nop',
+                handler: () => {}
               }
-            },
-            {
-              text:'Nop',
-              handler: () => {}
-            }
-          ]
-        });
-        alert.present();
-        //this.navCtrl.setRoot('TabsPage');
-      } else if (resp.status=='ERROR') {
-        let toast = this.toastCtrl.create({
-          message: 'It may be network error.',
-          duration: 8000,
-          position: 'top'
-        });
-        toast.present();
-      } else if (resp.status=='NG') {
-        //resp.error.text === 'RELOAD'  // You've been blocked. // You can't login system within minutes!
-        this.translateService.get('LOGIN_ERROR').subscribe((value) => {
+            ]
+          });
+          alert.present();
+          //this.navCtrl.setRoot('TabsPage');
+        } else if (resp.status=='ERROR') {
           let toast = this.toastCtrl.create({
-            //title: value,
-            message: `${resp.reason}`,
+            message: 'It may be network error.',
             duration: 8000,
             position: 'top'
           });
           toast.present();
-        })
-      }
+        } else if (resp.status=='NG') {
+          //resp.error.text === 'RELOAD'  // You've been blocked. // You can't login system within minutes!
+          this.translateService.get('LOGIN_ERROR').subscribe((value) => {
+            let toast = this.toastCtrl.create({
+              //title: value,
+              message: `${resp.reason}`,
+              duration: 8000,
+              position: 'top'
+            });
+            toast.present();
+          })
+        }
+      });
     });
   }
 }
