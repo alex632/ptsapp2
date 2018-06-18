@@ -67,8 +67,8 @@
 </ion-content>
 
 <ion-footer>
-  <ion-item *ngIf="rejectReason">退回理由: <b>{{rejectReason}}</b></ion-item>
-  <button ion-button *ngIf="showApprove" (click)="approve()">Approve</button>
-  <button ion-button *ngIf="showReject" color="danger" (click)="reject()">Reject</button>
-  <button ion-button *ngIf="showReturn" color="danger" (click)="return()">Return</button>
+  <ion-item *ngIf="rejectReason"><strong>退回理由:</strong> <b>{{rejectReason}}</b></ion-item>
+  <button ion-button *ngIf="showApprove" (click)="approveTS()">Approve</button>
+  <button ion-button *ngIf="showReject" color="danger" (click)="rejectTS()">Reject</button>
+  <button ion-button *ngIf="showReturn" color="danger" (click)="returnTS()">Return</button>
 </ion-footer>

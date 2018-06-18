@@ -16,6 +16,7 @@ export class SubordinatesProvider {
   //private SUBHEADS_STORAGE_KEY: string = '_mySubHeads';
   //private SUBDEPARTMENTS_STORAGE_KEY: string = '_mySubDepartments';
   private refreshEvent: string = 'subordinates-refresh';
+  private path4ts: string = '/~pts/subsystem/tss/web_pages/application/subordinate_review.php';
 
   constructor(public api: Api, public storage: Storage, public events: Events) {
     //console.log('Hello SubordinatesProvider Provider');
@@ -303,7 +304,7 @@ export class SubordinatesProvider {
 
     let refresh = (storageKey, uid, startMonday) => {
       return new Promise((resolve, reject) => {
-        this.api.get('/~pts/subsystem/tss/web_pages/application/subordinate_review.php', {
+        this.api.get(this.path4ts, {
           'webmode': 'j',
           'user_id': uid,       // e.g. 864
           'date': startMonday   // e.g. 2018-05-21
@@ -344,6 +345,39 @@ export class SubordinatesProvider {
       });
     });
 
+  }
+
+  approveTimeSheet(uid, startMonday) {
+    return this.api.post(this.path4ts, {
+      'webmode': 'j', //NOTE: no effect now!
+      'type': 'approve',
+      'user_id': uid,       // e.g. 864
+      'date': startMonday   // e.g. 2018-06-04
+    });
+  }
+
+  rejectTimeSheet(uid, startMonday, reason) {
+    return this.api.post(this.path4ts, {
+      'webmode': 'j', //NOTE: no effect now!
+      'type': 'reject',
+      'over_all_reject_reason': reason,
+      'user_id': uid,       // e.g. 864
+      'date': startMonday   // e.g. 2018-06-04
+    });
+  }
+
+  returnTimeSheet(uid, startMonday) {
+    return this.api.post(this.path4ts, {
+      'webmode': 'j', //NOTE: no effect now!
+      'type': 'return',
+      'user_id': uid,       // e.g. 864
+      'date': startMonday   // e.g. 2018-06-04
+    });
+    /*
+    .subscribe(resp=>{
+      console.log(`returnTimeSheet get 302, don't follow`);
+    });
+    */
   }
 
 }

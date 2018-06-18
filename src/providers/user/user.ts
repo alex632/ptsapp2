@@ -100,14 +100,22 @@ export class User {
       this.http.post('http://10.43.146.37/~pts/model/public_service.php?action=check_login',
         body.toString(),
         {
-          observe: 'response',  // get http headers
+          //observe: 'response',  // get http headers
+          withCredentials: true,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }
       ).subscribe((res: any) => {
         //console.log(res.headers.get('Set-Cookie'));     // null, Cookie not gettable!
         //console.log(res.headers.get('Content-Type'));   // Expect: text/html; charset=UTF-8
+        console.log('Login succeeded.', res);
+        console.log(res); //null
+        this.setCredential(accountInfo).then(()=>{
+          observer.next('OK');
+        });
+        this.getMyUID();
+        /*
         if (res.headers.get('Content-Length')==='0') {
-          //console.log('Login succeeded.', res);
+          console.log('Login succeeded.', res);
           this.setCredential(accountInfo).then(()=>{
             observer.next('OK');
           })
@@ -116,6 +124,7 @@ export class User {
           console.log('Login failed.', res);  //NOTE: Couldn't get here???
           observer.next('NG');
         }
+        */
         //observer.complete();
         /*
         if (res.status == 'success') {

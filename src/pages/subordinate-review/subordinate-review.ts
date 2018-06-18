@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events, AlertController } from 'ionic-angular';
 import { SubordinatesProvider } from '../../providers/subordinates/subordinates';
 
 /**
@@ -28,7 +28,11 @@ export class SubordinateReviewPage {
   showReturn: boolean = false;
   rejectReason: string = "";
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public events: Events, public subordinates: SubordinatesProvider) {
+  constructor(public navCtrl: NavController,
+    public navParams: NavParams,
+    public events: Events,
+    public alertCtrl: AlertController,
+    public subordinates: SubordinatesProvider) {
     this.member = navParams.get('member');
     this.week = navParams.get('week');
   }
@@ -43,7 +47,7 @@ export class SubordinateReviewPage {
       for (let i of Object.keys(tsObj)) {
         this.timesheet.unshift(tsObj[i]);
       }
-      console.log(obj.data.show_approve, obj.data.show_reject, obj.data.show_return, obj.data.reject_reason);
+      //console.log(obj.data.show_approve, obj.data.show_reject, obj.data.show_return, obj.data.reject_reason);
       this.showApprove = obj.data.show_approve;
       this.showReject = obj.data.show_reject;
       this.showReturn = obj.data.show_return;
@@ -54,22 +58,77 @@ export class SubordinateReviewPage {
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter SubordinateReviewPage');
-    this.timeSheetStyle = 'chart';
+    this.timeSheetStyle = 'list';
   }
 
   refresh() {
     this.events.publish('refresh-timesheet', this.member.id, this.week.start_date);
   }
 
-  approve() {
-    console.log("approve");
+  approveTS() {
+    this.subordinates.approveTimeSheet(this.member.id, this.week.start_date).subscribe(obj=>{
+      console.log("approve TS");
+      console.log(obj);
+    });
   }
 
-  reject() {
-    console.log("reject");
+  rejectTS() {
+    let prompt = this.alertCtrl.create({
+      title: '殘忍拒絕',
+      message: '為什麼你要拒絕部屬的工時？説明白講清楚！',
+      inputs: [
+        {
+          name: 'reason',
+          placeholder: '理由'
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: data => {
+            console.log('rejct cancelled.');
+          }
+        },
+        {
+          text: 'Just do it',
+          handler: data => {
+            console.log('Just reject it.');
+            console.log(data);
+            this.subordinates.rejectTimeSheet(this.member.id, this.week.start_date, data.reason).subscribe(obj=>{
+              console.log("reject TS");
+              console.log(obj);
+            });
+          }
+        }
+      ]
+    });
+    prompt.present();
   }
 
-  return() {
-    console.log("return");
+  returnTS() {
+    let prompt = this.alertCtrl.create({
+      title: 'Return',
+      message: '你确定吗？状态将改变为审核。',
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: data => {
+            console.log('return cancelled.');
+          }
+        },
+        {
+          text: 'OK',
+          handler: data => {
+            console.log('Just return it.');
+            console.log(data);
+            this.subordinates.returnTimeSheet(this.member.id, this.week.start_date).subscribe(obj=>{
+              console.log("return TS");
+              console.log(obj);
+            });
+          }
+        }
+      ]
+    });
+    prompt.present();
   }
 }

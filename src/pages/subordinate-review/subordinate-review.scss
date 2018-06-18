@@ -24,4 +24,8 @@ page-subordinate-review {
     div.day:nth-child(7) {
         border-right: none;
     }
+    strong {
+        font-weight: bolder;
+        color: red;
+    }
 }

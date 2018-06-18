@@ -15,8 +15,11 @@ export class Api {
   get(endpoint: string, params?: any, reqOpts?: any) {
     if (!reqOpts) {
       reqOpts = {
+        withCredentials: true,
         params: new HttpParams()
       };
+    } else {
+      reqOpts.withCredentials = true; // Track cookies
     }
 
     // Support easy query params for GET requests
@@ -31,7 +34,18 @@ export class Api {
   }
 
   post(endpoint: string, body: any, reqOpts?: any) {
-    return this.http.post(this.url + '/' + endpoint, body, reqOpts);
+    if (!reqOpts) {
+      reqOpts = {};
+    }
+
+    reqOpts.withCredentials = true; // Track cookies
+    reqOpts.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+    let b = new HttpParams();
+    for (let k in body) {
+      b = b.set(k, body[k]);
+    }
+
+    return this.http.post(this.url + endpoint, b.toString(), reqOpts);
   }
 
   put(endpoint: string, body: any, reqOpts?: any) {
