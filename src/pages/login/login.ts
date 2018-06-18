@@ -27,7 +27,7 @@ export class LoginPage {
     user.getCredential().then(cred=>{
       this.account.user = cred.user;
       this.account.password = cred.password;
-      console.log('LoginPage constructor: Load cred');
+      console.log('LoginPage constructor: get credential from storage.');
     });
   }
 

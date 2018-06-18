@@ -75,16 +75,95 @@ export class User {
     "n+m1fsHE6w+n9PU7kvkLnaZOoTXPNu94/TUPR+xDzUIIMA=="
 
   login(accountInfo: any) {
+    // Just to prove fetch() is Ok and HttpClient sucks
+
+    return Observable.create(observer => {
+      console.log("do it.");
+      
+      fetch('http://10.43.146.37/~pts/model/public_service.php?action=check_login',
+        {
+          method: 'POST',
+          body: "account=8106062&password=18Indepp",
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          credentials: 'include',
+          //mode: 'cors'
+        }
+      ).then(resp=>{
+        console.log("fetch ok");
+        console.log(resp);
+        for (let k in resp) {
+          console.log(`${k}: ${resp[k]}`);
+        }
+        if (resp.ok) {
+          console.log('resp OK');
+          observer.next({status:'OK'});
+        } else {
+          // May be 404 or others
+          console.error(resp);
+          throw new Error('Network response was not ok.');
+        }
+      }, err=>{
+        console.log("fetch err");
+        console.log(err);
+        for (let k in err) {
+          console.log(`${k}: ${err[k]}`);
+        }
+        observer.next({status:'NG'});
+      }).catch(err=>{
+        console.log('There has been a problem with your fetch operation: ', err.message);
+        console.log(err);
+        for (let k in err) {
+          console.log(`${k}: ${err[k]}`);
+        }
+        observer.next({status:'ERROR'});
+
+      });
+    
+      /*
+      //fetch("https://api.github.com/users/seeschweiler",
+      fetch("https://mockbin.org/bin/8023d488-a89a-45db-aba6-502414a9c523",
+      {
+        //credentials: 'include',
+        mode: 'cors'
+      }).then(resp => {
+        console.log('resp GOT');
+        console.log(resp);
+        if(resp.ok) {
+          console.log('resp OK');
+          resp.text().then(obj=>{
+            console.log(obj);  
+            observer.next({status:'OK'});
+          })
+        } else {
+          // May be 404 or others
+          //console.error(resp);
+          throw new Error('Network response was not ok.');
+        }
+      }).catch(error=>{
+        console.log('There has been a problem with your fetch operation: ', error.message);
+        console.log(error);
+        for (let k in error) {
+          console.log(`${k}: ${error[k]}`);
+        }
+        observer.next({status:'NG'});
+      });
+      */
+    });
+  }
+
+  _login(accountInfo: any) {
 
     const body = new HttpParams()
       .set('account', accountInfo.user)
       .set('password', accountInfo.password);
 
     //NOTE: Login to PRD for retrieving avatars because test servers don't have them. Should remove later.
+    /*
     this.http.post('https://pts.wistron.com/~pts/model/public_service.php?action=check_login',
       body.toString(),
       {
         observe: 'response',  // get http headers
+        withCredentials: true,
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
       }
     ).subscribe((res: any) => {
@@ -93,13 +172,27 @@ export class User {
         console.error('Login to PRD ERROR.', err);
         console.error(err);
     });
+    */
     //NOTE: to be deleted.
 
     return Observable.create(observer => {
+      console.log('WTF! Damn ionic!');
+      
+      //this.http.get("https://api.github.com/users/seeschweiler").subscribe(resp=>{
+      this.http.get("http://10.43.148.70/html5/failed.html", {responseType: "text", withCredentials: true}).subscribe(resp=>{
+      console.log(resp);
+      console.log("application/json really needed?");
+    }, err=>{
+      console.error('api.github also dead?!');
+      console.error(err);
+    });
+
       this.http.post('http://10.43.146.37/~pts/model/public_service.php?action=check_login',
         body.toString(),
         {
           //observe: 'response',  // get http headers
+          responseType: "text",
+          //withCredentials: true,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }
       ).subscribe((res: any) => {
@@ -125,13 +218,15 @@ export class User {
       }, (err: HttpErrorResponse) => {   // Unable to get a response of JSON format
         //console.error('Login failed.', err);
         console.error('Login failed.', err.error.text);
-        //console.log(err);
+        console.log(err);
+        observer.next({status:'OK'});
+        this.getMyUID();  //DEBUG
         if (err.status == 200) {
-          observer.next({status:'NG', reason: err.error.text}); // Definite error: username/password wrong or locked.
+          //observer.next({status:'NG', reason: err.error.text}); // Definite error: username/password wrong or locked.
         } else {
           // Maybe network errror
-          console.log(err);
-          observer.next({status: 'ERROR'});
+          //console.log(err);
+          //observer.next({status: 'ERROR'});
         }
       });
     });
@@ -139,8 +234,15 @@ export class User {
   }
 
   getMyUID() {
-    this.api.get('/~pts/subsystem/tss/web_pages/application/iframe/my_task_table.php',
-      {'webmode': 'j'}).subscribe(resp=>{
+    /*
+    this.http.get("https://api.github.com/users/seeschweiler").subscribe(resp=>{
+      console.log(resp);
+      console.log("application/json really needed?");
+    });
+    */
+    this.api.get('/~pts/subsystem/tss/web_pages/application/iframe/my_task_table.php', {'webmode': 'j'})
+    .subscribe(resp=>{
+      console.log(resp);
       let uid = resp['user_id'];
       console.log("My UID:", uid);
       this.storage.set('$MyUID$', uid).then(()=>{

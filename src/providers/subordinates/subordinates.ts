@@ -64,6 +64,7 @@ export class SubordinatesProvider {
           param['dept_id'] = deptId;
         }
         this.api.get('/~pts/subsystem/tss/web_pages/application/subordinate.php', param).subscribe(resp=>{
+          console.log("Process the data given by server");
           // Process the data given by server
           let d0 : Array<any> = resp["weekly_data"];  //NOTE:  Must be an array. What if error?
           let du = [];

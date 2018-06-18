@@ -27,7 +27,14 @@ export class Api {
       }
     }
 
-    return this.http.get(this.url + endpoint, reqOpts);
+    //reqOpts.withCredentials = true; // Track cookies
+    //reqOpts.responseType = "text";
+    //reqOpts.observe = 'response';
+    //console.log("api.get:");
+    //console.log(reqOpts);
+    
+    return this.http.get(this.url + endpoint, {
+      params: reqOpts.params, responseType: "text", withCredentials: true });
   }
 
   post(endpoint: string, body: any, reqOpts?: any) {
