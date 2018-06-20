@@ -145,7 +145,7 @@ export class User {
     this.api.get('/~pts/subsystem/tss/web_pages/application/iframe/my_task_table.php', {'webmode': 'j'})
     .subscribe(resp=>{
       console.log(resp);
-      let uid = resp['user_id'];
+      let uid = resp['use_id'];
       console.log("My UID:", uid);
       this.storage.set('$MyUID$', uid).then(()=>{
         console.log("set done, so what?");

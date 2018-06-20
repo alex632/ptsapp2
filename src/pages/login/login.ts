@@ -54,7 +54,7 @@ export class LoginPage {
         console.log("I'm in login response.");
         console.log(resp);
       
-        //this.navCtrl.push('TabsPage');
+        //this.navCtrl.push(MainPage);
         if (resp.status=='OK') {
           let alert = this.alertCtrl.create({
             title: 'Login OK',
