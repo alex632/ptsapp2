@@ -112,7 +112,6 @@ export class User {
         // On iOS, it looks like only 'Content-Type' gettable. Others such as 'Content-Length', 'Server', 'X-Powered-By' all null.
         // console.log(res.headers.get('Set-Cookie'));     // null, Cookie not gettable on Chrome or iOS.
         console.log('Login succeeded.', res);
-        console.log(res);
         this.setCredential(accountInfo).then(()=>{
           console.log('setCredential done');
           observer.next({status:'OK'});            
@@ -131,13 +130,11 @@ export class User {
         console.error('Login failed.', err);
         //console.error('Login failed.', err.error.text);
         console.log(err);
-        observer.next({status:'NG', reason:err.error.text});
         if (err.status == 200) {
-          //observer.next({status:'NG', reason: err.error.text}); // Definite error: username/password wrong or locked.
+          observer.next({status:'NG', reason: err.error.text}); // Definite error: username/password wrong or locked.
         } else {
           // Maybe network errror
-          //console.log(err);
-          //observer.next({status: 'ERROR'});
+          observer.next({status: 'ERROR'});
         }
       });
     });

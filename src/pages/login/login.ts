@@ -56,7 +56,6 @@ export class LoginPage {
       
         //this.navCtrl.push('TabsPage');
         if (resp.status=='OK') {
-          //this.navCtrl.push('TabsPage');
           let alert = this.alertCtrl.create({
             title: 'Login OK',
             message: 'Jump to main page?',
@@ -75,11 +74,11 @@ export class LoginPage {
             ]
           });
           alert.present();
-          //this.navCtrl.setRoot('TabsPage');
         } else if (resp.status=='ERROR') {
           let toast = this.toastCtrl.create({
-            message: 'It may be network error.',
-            duration: 8000,
+            message: 'Unknown error occurred. It may be network issues.',
+            duration: 12000,
+            showCloseButton: true,
             position: 'top'
           });
           toast.present();
@@ -87,9 +86,9 @@ export class LoginPage {
           //resp.error.text === 'RELOAD'  // You've been blocked. // You can't login system within minutes!
           this.translateService.get('LOGIN_ERROR').subscribe((value) => {
             let toast = this.toastCtrl.create({
-              //title: value,
               message: `${resp.reason}`,
-              duration: 8000,
+              duration: 12000,
+              showCloseButton: true, 
               position: 'top'
             });
             toast.present();
