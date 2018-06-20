@@ -48,7 +48,7 @@ export class TabsPage {
     this.subordinates.getSubDepartments(null).share().subscribe(obj => {
       //NOTE: What about 0? => ""
       this.reviewCount = obj.review_data_count;
-      console.log('reviewCount', this.reviewCount);
+      console.log('tabBadge reviewCount: ', this.reviewCount);
     });
     
   }

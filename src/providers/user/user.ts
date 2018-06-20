@@ -113,7 +113,6 @@ export class User {
         // console.log(res.headers.get('Set-Cookie'));     // null, Cookie not gettable on Chrome or iOS.
         console.log('Login succeeded.', res);
         this.setCredential(accountInfo).then(()=>{
-          console.log('setCredential done');
           observer.next({status:'OK'});            
           this.getMyUID();
           //observer.complete();
@@ -127,8 +126,7 @@ export class User {
         }
         */
       }, (err: HttpErrorResponse) => {   // Unable to get a response of JSON format
-        console.error('Login failed.', err);
-        //console.error('Login failed.', err.error.text);
+        console.error('Login failed.');
         console.log(err);
         if (err.status == 200) {
           observer.next({status:'NG', reason: err.error.text}); // Definite error: username/password wrong or locked.
@@ -146,9 +144,8 @@ export class User {
     .subscribe(resp=>{
       console.log(resp);
       let uid = resp['use_id'];
-      console.log("My UID:", uid);
       this.storage.set('$MyUID$', uid).then(()=>{
-        console.log("set done, so what?");
+        console.log("My UID:", uid);
       });
     });
   }

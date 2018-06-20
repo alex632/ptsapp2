@@ -46,7 +46,6 @@ export class SettingsPage {
     public translate: TranslateService) {
       storage.get('$MyUID$').then(value=>{
         this.myUID = value;
-        //console.log("MyUID", this.myUID);
       });
   }
 

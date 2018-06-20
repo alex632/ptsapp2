@@ -77,7 +77,7 @@ export class SubordinatesPage {
       setAllWeeksIcon(this.subHeads);
       console.log('subHeadsInfo', this.subHeadsInfo);
     });
-    this.subordinates.getSubDepartments(this.deptId).subscribe(obj => {
+    this.subordinates.getSubDepartments(this.deptId).share().subscribe(obj => {
       this.subDepartments = obj;
       console.log('subDepartments', this.subDepartments);
     });

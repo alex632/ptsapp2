@@ -51,11 +51,9 @@ export class LoginPage {
     
     this.user.login(this.account).subscribe((resp) => {
       loader.dismiss().then(()=>{
-        console.log("I'm in login response.");
-        console.log(resp);
-      
-        //this.navCtrl.push(MainPage);
         if (resp.status=='OK') {
+          this.navCtrl.push(MainPage);
+          /* For debugging
           let alert = this.alertCtrl.create({
             title: 'Login OK',
             message: 'Jump to main page?',
@@ -64,16 +62,16 @@ export class LoginPage {
                 text:'OK',
                 handler: () => {
                   this.navCtrl.push(MainPage);
-                  console.log('OK clicked');
                 }
               },
               {
-                text:'Nop',
+                text:'NO',
                 handler: () => {}
               }
             ]
           });
           alert.present();
+          */
         } else if (resp.status=='ERROR') {
           let toast = this.toastCtrl.create({
             message: 'Unknown error occurred. It may be network issues.',

@@ -239,23 +239,25 @@ export class SubordinatesProvider {
 
     return Observable.create(observer => {
 
-      this.events.subscribe(this.refreshEvent, () => {
-        console.log(`Refresh ${storageKey} at ${new Date()}`);
-        refresh(storageKey, deptId).then((obj) => {
+      let refreshIt = () => {
+        refresh(storageKey, deptId).then(obj => {
           observer.next(obj);
         });
+      }
+      
+      this.events.subscribe(this.refreshEvent, () => {
+        console.log(`Event-Refresh ${storageKey} at ${new Date()}`);
+        refreshIt();
       });
 
       this.storage.get(storageKey).then((obj) => {
         if (obj && obj.time && obj.data && obj.review_data_count) {
           //console.log('getSubDepartments HIT');
           observer.next(obj);
-          //refresh();  //NOTE: refresh now?
+          refreshIt();  // Refresh data in background.
         } else {
           //console.log('getSubDepartments MISS');
-          refresh(storageKey, deptId).then((obj) => {
-            observer.next(obj);
-          });
+          refreshIt();
         }
       });
 
