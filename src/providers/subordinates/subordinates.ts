@@ -65,6 +65,7 @@ export class SubordinatesProvider {
           param['dept_id'] = deptId;
         }
         this.api.get('/~pts/subsystem/tss/web_pages/application/subordinate.php', param).subscribe(resp=>{
+          console.log("Process the data given by server");
           // Process the data given by server
           let d0 : Array<any> = resp["weekly_data"];  //NOTE:  Must be an array. What if error?
           let du = [];
@@ -104,6 +105,7 @@ export class SubordinatesProvider {
           console.log(`Got ${storage_key} from server`, info.time, info);
         }, err=>{
           console.log(`Get ${storage_key} from server ERROR`, err);
+          console.error(err);
         });
       });
     };

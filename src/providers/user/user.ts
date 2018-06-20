@@ -1,5 +1,5 @@
 //import 'rxjs/add/operator/toPromise';
-import { HttpClient, HttpParams } from '@angular/common/http';  //NOTE: I need HTTP response headers that api provider can't give me.
+import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';  //NOTE: I need HTTP response headers that api provider can't give me.
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Storage } from '@ionic/storage';
@@ -35,6 +35,7 @@ export class User {
    * Send a POST request to our login endpoint with the data
    * the user entered on the form.
    */
+  //NOTE: to be deleted.
   login_old(accountInfo: any) { //NOTE: to be deleted.
     let seq = this.api.post('login', accountInfo).share();
 
@@ -80,52 +81,44 @@ export class User {
       .set('password', accountInfo.password);
 
     //NOTE: Login to PRD for retrieving avatars because test servers don't have them. Should remove later.
+    /*
     this.http.post('https://pts.wistron.com/~pts/model/public_service.php?action=check_login',
       body.toString(),
       {
         observe: 'response',  // get http headers
+        withCredentials: true,
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
       }
     ).subscribe((res: any) => {
-      if (res.headers.get('Content-Length')==='0') {
-        //console.log('Login to PRD succeeded.', res);
-      } else {
-        console.log('Login to PRD failed.', res);
-      }
+        console.log('Login to PRD succeeded.', res);
     }, err => {
-        console.error('Login to PRD ERROR', err);
+        console.error('Login to PRD ERROR.', err);
+        console.error(err);
     });
+    */
 
     return Observable.create(observer => {
+
       this.http.post('http://10.43.146.37/~pts/model/public_service.php?action=check_login',
         body.toString(),
         {
           //observe: 'response',  // get http headers
+          //responseType: "text",
           withCredentials: true,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }
       ).subscribe((res: any) => {
-        //console.log(res.headers.get('Set-Cookie'));     // null, Cookie not gettable!
-        //console.log(res.headers.get('Content-Type'));   // Expect: text/html; charset=UTF-8
+        // JSON result obtained including empty. It's empty in this case.
+        // On iOS, it looks like only 'Content-Type' gettable. Others such as 'Content-Length', 'Server', 'X-Powered-By' all null.
+        // console.log(res.headers.get('Set-Cookie'));     // null, Cookie not gettable on Chrome or iOS.
         console.log('Login succeeded.', res);
-        console.log(res); //null
+        console.log(res);
         this.setCredential(accountInfo).then(()=>{
-          observer.next('OK');
-        });
-        this.getMyUID();
-        /*
-        if (res.headers.get('Content-Length')==='0') {
-          console.log('Login succeeded.', res);
-          this.setCredential(accountInfo).then(()=>{
-            observer.next('OK');
-          })
+          console.log('setCredential done');
+          observer.next({status:'OK'});            
           this.getMyUID();
-        } else {
-          console.log('Login failed.', res);  //NOTE: Couldn't get here???
-          observer.next('NG');
-        }
-        */
-        //observer.complete();
+          //observer.complete();
+        });
         /*
         if (res.status == 'success') {
           this._loggedIn(res);
@@ -134,28 +127,33 @@ export class User {
           console.log('Login failed.', res);
         }
         */
-      }, err => {   // Unable to get a response of json format
-        if (err.status == '200') {
-          // Definite error: username/password wrong
-          observer.next('NG');
+      }, (err: HttpErrorResponse) => {   // Unable to get a response of JSON format
+        console.error('Login failed.', err);
+        console.error('Login failed.', err.error.text);
+        console.log(err);
+        observer.next({status:'NG'});
+        //this.getMyUID();  //DEBUG
+        if (err.status == 200) {
+          //observer.next({status:'NG', reason: err.error.text}); // Definite error: username/password wrong or locked.
         } else {
           // Maybe network errror
-          observer.next('ERROR');
+          //console.log(err);
+          //observer.next({status: 'ERROR'});
         }
-        //console.error('Login ERROR', err);
-        //console.error('err.error.text', err.error.text);
-        //observer.complete();
       });
     });
 
-    //return seq;
   }
 
   getMyUID() {
-    this.api.get('/~pts/subsystem/tss/web_pages/application/iframe/my_task_table.php',
-      {'webmode': 'j'}).subscribe(resp=>{
-        //console.log("My UID:", resp['use_id']);
-        this.storage.set('$MyUID$', resp['use_id']);
+    this.api.get('/~pts/subsystem/tss/web_pages/application/iframe/my_task_table.php', {'webmode': 'j'})
+    .subscribe(resp=>{
+      console.log(resp);
+      let uid = resp['user_id'];
+      console.log("My UID:", uid);
+      this.storage.set('$MyUID$', uid).then(()=>{
+        console.log("set done, so what?");
+      });
     });
   }
 

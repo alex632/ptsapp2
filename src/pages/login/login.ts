@@ -27,7 +27,7 @@ export class LoginPage {
     user.getCredential().then(cred=>{
       this.account.user = cred.user;
       this.account.password = cred.password;
-      console.log('LoginPage constructor: Load cred');
+      console.log('LoginPage constructor: get credential from storage.');
     });
   }
 
@@ -45,31 +45,57 @@ export class LoginPage {
     
     let loader = this.loadingCtrl.create({
       content: "Please wait...",  //NOTE: should use translateService.get
-      duration: 33000
+      duration: 13000
     });
     loader.present();
     
     this.user.login(this.account).subscribe((resp) => {
-      loader.dismiss();
-      if (resp=='OK') {
-        this.navCtrl.push(MainPage);
-      } else if (resp=='NG') {
-        this.translateService.get('LOGIN_ERROR').subscribe((value) => {
+      loader.dismiss().then(()=>{
+        console.log("I'm in login response.");
+        console.log(resp);
+      
+        //this.navCtrl.push('TabsPage');
+        if (resp.status=='OK') {
+          //this.navCtrl.push('TabsPage');
+          let alert = this.alertCtrl.create({
+            title: 'Login OK',
+            message: 'Jump to main page?',
+            buttons: [
+              {
+                text:'OK',
+                handler: () => {
+                  this.navCtrl.push(MainPage);
+                  console.log('OK clicked');
+                }
+              },
+              {
+                text:'Nop',
+                handler: () => {}
+              }
+            ]
+          });
+          alert.present();
+          //this.navCtrl.setRoot('TabsPage');
+        } else if (resp.status=='ERROR') {
           let toast = this.toastCtrl.create({
-            message: value,
-            duration: 4000,
+            message: 'It may be network error.',
+            duration: 8000,
             position: 'top'
           });
           toast.present();
-        })
-      } else {
-        let toast = this.toastCtrl.create({
-          message: 'It may be network error.',
-          duration: 3000,
-          position: 'top'
-        });
-        toast.present();
-      }
+        } else if (resp.status=='NG') {
+          //resp.error.text === 'RELOAD'  // You've been blocked. // You can't login system within minutes!
+          this.translateService.get('LOGIN_ERROR').subscribe((value) => {
+            let toast = this.toastCtrl.create({
+              //title: value,
+              message: `${resp.reason}`,
+              duration: 8000,
+              position: 'top'
+            });
+            toast.present();
+          })
+        }
+      });
     });
   }
 }
