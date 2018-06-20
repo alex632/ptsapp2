@@ -129,10 +129,9 @@ export class User {
         */
       }, (err: HttpErrorResponse) => {   // Unable to get a response of JSON format
         console.error('Login failed.', err);
-        console.error('Login failed.', err.error.text);
+        //console.error('Login failed.', err.error.text);
         console.log(err);
-        observer.next({status:'NG'});
-        //this.getMyUID();  //DEBUG
+        observer.next({status:'NG', reason:err.error.text});
         if (err.status == 200) {
           //observer.next({status:'NG', reason: err.error.text}); // Definite error: username/password wrong or locked.
         } else {
