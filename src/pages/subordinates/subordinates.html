@@ -21,7 +21,7 @@
     <ion-list-header>{{ 'DIRECT_MEMBERS' | translate }}</ion-list-header>
     <ion-item *ngFor="let member of myMembers">
       <ion-avatar item-start>
-        <img src="https://pts.wistron.com/~pts/dispatcher/account/account_photo.php?action=get_photo&to=get_user_photo&id={{member.id}}">
+        <img src="http://10.43.146.37/~pts/dispatcher/account/account_photo.php?action=get_photo&to=get_user_photo&id={{member.id}}">
       </ion-avatar>
       <div class="name-block">
         <h2><b>{{member.user.user_info.name}}</b></h2>
@@ -42,7 +42,7 @@
     <ion-item *ngFor="let member of subHeads">
       <!--<b>{{member.user.user_info.name}}</b> <span>{{member.user.user_info.dept_name}}</span>-->
       <ion-avatar item-start>
-        <img src="https://pts.wistron.com/~pts/dispatcher/account/account_photo.php?action=get_photo&to=get_user_photo&id={{member.id}}">
+        <img src="http://10.43.146.37/~pts/dispatcher/account/account_photo.php?action=get_photo&to=get_user_photo&id={{member.id}}">
       </ion-avatar>
       <div class="name-block">
         <h2><b>{{member.user.user_info.name}}</b></h2>
