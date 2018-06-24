@@ -12,10 +12,7 @@ import { Events } from 'ionic-angular';
 */
 @Injectable()
 export class SubordinatesProvider {
-  //private MEMBERS_STORAGE_KEY: string = '_myMembers';
-  //private SUBHEADS_STORAGE_KEY: string = '_mySubHeads';
-  //private SUBDEPARTMENTS_STORAGE_KEY: string = '_mySubDepartments';
-  private refreshEvent: string = 'subordinates-refresh';
+  //private refreshEvent: string = 'subordinates-refresh';
   private path4ts: string = '/~pts/subsystem/tss/web_pages/application/subordinate_review.php';
 
   constructor(public api: Api, public storage: Storage, public events: Events) {
@@ -65,7 +62,6 @@ export class SubordinatesProvider {
           param['dept_id'] = deptId;
         }
         this.api.get('/~pts/subsystem/tss/web_pages/application/subordinate.php', param).subscribe(resp=>{
-          console.log("Process the data given by server");
           // Process the data given by server
           let d0 : Array<any> = resp["weekly_data"];  //NOTE:  Must be an array. What if error?
           let du = [];
@@ -90,12 +86,10 @@ export class SubordinatesProvider {
               return -1;
             if (a.user.user_info.dept_name > b.user.user_info.dept_name)
               return 1;
-            /*
             if (a.user.user_info.name < b.user.user_info.name)
               return -1;
             if (a.user.user_info.name > b.user.user_info.name)
               return 1;
-            */
             return 0;
           });
           let info = {time: new Date(), data: {duration: du, members:mary}};
@@ -112,12 +106,18 @@ export class SubordinatesProvider {
 
     return Observable.create(observer => {
 
-      this.events.subscribe(this.refreshEvent, () => {
-        console.log(`Refresh ${storage_key} at ${new Date()}`);
-        refresh(storage_key, kind, deptId).then((obj) => {
+      let refreshIt = () => {
+        refresh(storage_key, kind, deptId).then(obj => {
           observer.next(obj);
         });
+      }
+
+      /*
+      this.events.subscribe(this.refreshEvent, () => {
+        console.log(`Event-Refresh ${storage_key} at ${new Date()}`);
+        refreshIt();
       });
+      */
 
       //
       // Return the data already in storage.
@@ -127,12 +127,10 @@ export class SubordinatesProvider {
         if (obj && obj.time && obj.data && obj.data.duration && obj.data.members) {
           //console.log(`get ${kind} HIT`);
           observer.next(obj); // return data to consumer
-          //refresh();  //NOTE: refresh now?
+          refreshIt();  // Refresh data in background.
         } else {
           //console.log(`get ${kind} MISS`);
-          refresh(storage_key, kind, deptId).then((obj) => {
-            observer.next(obj);  // return data to consumer
-          });
+          refreshIt();
         }
       });
     });
@@ -216,26 +214,10 @@ export class SubordinatesProvider {
           console.log(`Got ${storageKey} from server`, info.time, info);
         }, err=>{
           //NOTE: Doesn't handle network error yet!
-          console.log(`Got ${storageKey} from server ERROR`);
+          console.log(`Get ${storageKey} from server ERROR`);
         });
       });
     };
-    /*
-    return new Promise((resolve, reject) => {
-      this.storage.get(this.SUBDEPARTMENTS_STORAGE_KEY).then((obj) => {
-        if (obj && obj.time) {
-          console.log('getSubDepartments HIT');
-          resolve(obj);
-          refresh();  //NOTE: No then() workable?
-        } else {
-          console.log('getSubDepartments MISS');
-          refresh().then((obj) => {
-            resolve(obj);
-          });
-        }
-      });
-    });
-    */
 
     return Observable.create(observer => {
 
@@ -245,10 +227,12 @@ export class SubordinatesProvider {
         });
       }
       
+      /*
       this.events.subscribe(this.refreshEvent, () => {
         console.log(`Event-Refresh ${storageKey} at ${new Date()}`);
         refreshIt();
       });
+      */
 
       this.storage.get(storageKey).then((obj) => {
         if (obj && obj.time && obj.data && obj.review_data_count) {
