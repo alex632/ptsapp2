@@ -17,11 +17,16 @@
 
 <ion-content>
 
+  <ion-refresher (ionRefresh)="clearCache($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
   <ion-list>
     <ion-list-header>{{ 'DIRECT_MEMBERS' | translate }}</ion-list-header>
     <ion-item *ngFor="let member of myMembers">
       <ion-avatar item-start>
-        <img src="https://pts.wistron.com/~pts/dispatcher/account/account_photo.php?action=get_photo&to=get_user_photo&id={{member.id}}">
+        <img-loader src="http://10.43.146.37/~pts/dispatcher/account/account_photo.php?action=get_photo&to=get_user_photo&id={{member.id}}" useImg (load)="onImageLoad($event)"></img-loader>
+        <!--<img src="http://10.43.146.37/~pts/dispatcher/account/account_photo.php?action=get_photo&to=get_user_photo&id={{member.id}}">-->
       </ion-avatar>
       <div class="name-block">
         <h2><b>{{member.user.user_info.name}}</b></h2>
@@ -37,12 +42,13 @@
     </ion-item>
   </ion-list>
 
-  <ion-list>
-    <ion-list-header><b>{{ 'DIRECT_HEADS' | translate }}</b></ion-list-header>
+  <ion-list *ngIf="showSubHeads">
+    <ion-list-header>{{ 'DIRECT_HEADS' | translate }}</ion-list-header>
     <ion-item *ngFor="let member of subHeads">
       <!--<b>{{member.user.user_info.name}}</b> <span>{{member.user.user_info.dept_name}}</span>-->
       <ion-avatar item-start>
-        <img src="https://pts.wistron.com/~pts/dispatcher/account/account_photo.php?action=get_photo&to=get_user_photo&id={{member.id}}">
+        <img-loader src="http://10.43.146.37/~pts/dispatcher/account/account_photo.php?action=get_photo&to=get_user_photo&id={{member.id}}" useImg (load)="onImageLoad($event)"></img-loader>
+        <!--<img src="http://10.43.146.37/~pts/dispatcher/account/account_photo.php?action=get_photo&to=get_user_photo&id={{member.id}}">-->
       </ion-avatar>
       <div class="name-block">
         <h2><b>{{member.user.user_info.name}}</b></h2>
@@ -60,11 +66,11 @@
     </ion-item>
   </ion-list>
 
-  <ion-list>
+  <ion-list *ngIf="showSubDepartments">
     <ion-list-header>{{ 'SUB_DEPARTMENTS' | translate }}</ion-list-header>
   </ion-list>
   <!--<ion-label>部門</ion-label>-->
-  <div class="dept-container">
+  <div class="dept-container" *ngIf="showSubDepartments">
     <div class="dept" *ngFor="let dept of subDepartments.data" (click)="openDept(dept)">
       <img src="assets/img/user.png" /><div>{{dept.name}}</div>
     </div>

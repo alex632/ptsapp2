@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
+import { ImageLoader } from 'ionic-image-loader';
 import { SubordinatesProvider } from '../../providers/subordinates/subordinates';
 
 /**
@@ -21,11 +22,13 @@ export class SubordinatesPage {
   myMembers: Array<any>;
   subHeadsInfo: any;
   subHeads: Array<any>;
-  subDepartments: Object = {};
+  showSubHeads: boolean = false;
+  subDepartments: any;
+  showSubDepartments: boolean = false;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public events: Events, public subordinates: SubordinatesProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public events: Events, private imageLoader: ImageLoader, public subordinates: SubordinatesProvider) {
     this.deptId = navParams.get('deptId');
-    console.log(`deptId=${this.deptId}`);
+    console.log(`SubordinatesPage constructor deptId=${this.deptId}`);
   }
 
   /**
@@ -64,31 +67,35 @@ export class SubordinatesPage {
       }
     }
 
-    console.log('ionViewDidLoad SubordinatesPage');
+    console.log(`ionViewDidLoad SubordinatesPage deptId=${this.deptId}`);
+    
     this.subordinates.getMembers(this.deptId).subscribe(obj=>{
       this.myMembersInfo = obj;
       this.myMembers = this.myMembersInfo.data.members;
       setAllWeeksIcon(this.myMembers);
-      console.log('membersInfo', obj);
+      console.log('membersInfo', this.myMembersInfo);
     });
     this.subordinates.getSubHeads(this.deptId).subscribe(obj=>{
       this.subHeadsInfo = obj;
       this.subHeads = this.subHeadsInfo.data.members;
       setAllWeeksIcon(this.subHeads);
+      //console.warn('this.subHeads.length=', this.subHeads.length);
+      this.showSubHeads = this.subHeads.length > 0;
       console.log('subHeadsInfo', this.subHeadsInfo);
     });
     this.subordinates.getSubDepartments(this.deptId).share().subscribe(obj => {
       this.subDepartments = obj;
+      this.showSubDepartments = this.subDepartments.data.length > 0;
       console.log('subDepartments', this.subDepartments);
     });
   }
 
   ionViewDidEnter() {
-    console.log('ionViewDidEnter SubordinatesPage');
+    console.log(`ionViewDidEnter SubordinatesPage deptId=${this.deptId}`);
   }
 
   ionViewWillLeave() {
-    console.log('ionViewWillLeave SubordinatesPage');
+    console.log(`ionViewWillLeave SubordinatesPage deptId=${this.deptId}`);
   }
 
   refresh() {
@@ -108,5 +115,15 @@ export class SubordinatesPage {
     this.navCtrl.push('SubordinatesPage', {
       deptId: dept.id
     });
+  }
+
+  clearCache(refresher) {
+    this.imageLoader.clearCache();
+    refresher.complete();
+  }
+
+  onImageLoad(event) {
+    console.log('image ready: ', event);
+    console.warn(event);
   }
 }
