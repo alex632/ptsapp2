@@ -1,5 +1,6 @@
 //import 'rxjs/add/operator/toPromise';
-import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';  //NOTE: I need HTTP response headers that api provider can't give me.
+import 'rxjs/add/operator/timeout';
+import { HttpClient, HttpParams/*, HttpErrorResponse*/ } from '@angular/common/http';  //NOTE: I need HTTP response headers that api provider can't give me.
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Storage } from '@ionic/storage';
@@ -107,11 +108,12 @@ export class User {
           withCredentials: true,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }
-      ).subscribe((res: any) => {
+      ).timeout(8000)
+      .subscribe((res: any) => {
         // JSON result obtained including empty. It's empty in this case.
         // On iOS, it looks like only 'Content-Type' gettable. Others such as 'Content-Length', 'Server', 'X-Powered-By' all null.
         // console.log(res.headers.get('Set-Cookie'));     // null, Cookie not gettable on Chrome or iOS.
-        console.log('Login succeeded.', res);
+        console.log('Login succeeded:', res);
         this.setCredential(accountInfo).then(()=>{
           observer.next({status:'OK'});            
           this.getMyUID();
@@ -125,15 +127,20 @@ export class User {
           console.log('Login failed.', res);
         }
         */
-      }, (err: HttpErrorResponse) => {   // Unable to get a response of JSON format
-        console.error('Login failed.');
+      }, (err: any) => {   // Unable to get a response of JSON format
+        console.error('Login failed:');
         console.log(err);
+        if (err.name === 'TimeoutError') {
+          observer.next({status:'NG', reason: err.message});  // "Timeout has occurred"
+        } else //if (err.name === 'HttpErrorResponse')
         if (err.status == 200) {
           observer.next({status:'NG', reason: err.error.text}); // Definite error: username/password wrong or locked.
         } else {
           // Maybe network errror
-          observer.next({status: 'ERROR'});
+          observer.next({status: 'UNKNOWN'});
         }
+      }, () => {
+        console.log('login complete.');  // Only when OK?
       });
     });
 

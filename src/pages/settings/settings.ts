@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, ActionSheetController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 
 import { Settings } from '../../providers';
@@ -42,6 +42,7 @@ export class SettingsPage {
     public formBuilder: FormBuilder,
     public navParams: NavParams,
     private alertCtrl: AlertController,
+    public actionSheetCtrl: ActionSheetController,
     public storage: Storage,
     public translate: TranslateService) {
       storage.get('$MyUID$').then(value=>{
@@ -112,7 +113,7 @@ export class SettingsPage {
 
   clearStorage() {
     let alert = this.alertCtrl.create({
-      title: 'Clear Storage',
+      title: '忘掉一切？',
       message: 'Are you sure?',
       buttons: [
         {
@@ -135,6 +136,31 @@ export class SettingsPage {
   }
 
   logout() {
+    let actionSheet = this.actionSheetCtrl.create({
+      title: '真的要登出？',
+      buttons: [
+        {
+          text: "没错！！！",
+          role: 'destructive',
+          handler: () => {
+            console.log('就是要登出！');
+            this.storage.clear().then(()=> {
+              this.navCtrl.setRoot('LoginPage');
+            });
+          }
+        },
+        {
+          text: " 我就说说而已别当真！",
+          role: 'cancel',
+          handler: () => {
+            console.log('没说要登出的啦！');
+          }
+        }
+      ]}
+    );
+    actionSheet.present();
+
+    /*
     let alert = this.alertCtrl.create({
       title: 'Logout',
       message: 'Are you sure?',
@@ -156,6 +182,7 @@ export class SettingsPage {
       ]
     });
     alert.present();
+    */
   }
 
 }
