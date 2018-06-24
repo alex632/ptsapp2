@@ -94,3 +94,11 @@ code (ex: en/gb/de/es/etc.).
 
 To change the language of the app, edit `src/app/app.component.ts` and modify
 `translate.use('en')` to use the LANGCODE from `src/assets/i18n/`
+
+
+### Additional packages
+npm i ionic-image-loader@4.2.1 
+npm i @ionic-native/file @ionic-native/file-transfer
+ 
+ionic cordova plugin add cordova-plugin-file-transfer 
+ionic cordova plugin add cordova-plugin-file
