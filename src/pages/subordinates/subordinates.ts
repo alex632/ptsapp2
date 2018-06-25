@@ -117,13 +117,29 @@ export class SubordinatesPage {
     });
   }
 
+  // Tried to use ionic-image-loader 5.0.2, but got a lot of problems. Damn poor quality and performance.
+  /*
+    CORS problem.
+    Someone said ionic-image-loader 4.2.1 should be used instead of 5.0.2, but it cannot solve CORS issues.
+    So I used 5.0.2 and made a little change:
+    this.http.get(currentItem.imageUrl, {
+        responseType: 'blob',
+    **  withCredentials: true,
+        headers: this.config.httpHeaders,
+    })
+    Looks workable but afer clearCache(), will get a lot of ["ImageLoader Error: ",{"code":12,"message":"PATH_EXISTS_ERR"}]
+    and many image file not saved.
+  
   clearCache(refresher) {
     this.imageLoader.clearCache();
     refresher.complete();
+    console.warn('Clear Image Cache');
   }
 
   onImageLoad(event) {
     console.log('image ready: ', event);
     console.warn(event);
+    // error JSON.stringify()ing argument: TypeError: JSON.stringify cannot serialize cyclic structures.
   }
+  */
 }

@@ -53,8 +53,9 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       this.imageLoaderConfig.enableDebugMode();
       this.imageLoaderConfig.enableFallbackAsPlaceholder(true);
-      this.imageLoaderConfig.setFallbackUrl('assets/img/avatar-none.jpg');
+      this.imageLoaderConfig.setFallbackUrl('assets/imgs/logo.png');
       this.imageLoaderConfig.setMaximumCacheAge(60 * 60 * 1000);
+      this.imageLoaderConfig.setConcurrency(1);
  
       this.statusBar.styleDefault();
       this.splashScreen.hide();
